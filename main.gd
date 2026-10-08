@@ -404,7 +404,7 @@ func draw_menu():
 	draw_circle(Vector2(160,620),190,Color(0.95,0.55,0.15,0.05))
 	for i in range(8):
 		var beam_x=520+i*92
-		draw_polygon(PackedVector2Array([
+		draw_poly(PackedVector2Array([
 			Vector2(beam_x,0),Vector2(beam_x+18,0),Vector2(beam_x+110,235),Vector2(beam_x+60,235)
 		]),PackedColorArray([Color(0.7,0.9,1.0,0.025),Color(0.7,0.9,1.0,0.025),Color(0.7,0.9,1.0,0.025),Color(0.7,0.9,1.0,0.025)]))
 	
@@ -504,7 +504,7 @@ func draw_game():
 		var x=18+i*78
 		draw_line(Vector2(x,45),Vector2(x,182),Color("#604a38"),4)
 		var fc=Color("#d63d45") if i%2==0 else Color("#f2e1aa")
-		draw_polygon(PackedVector2Array([Vector2(x,48),Vector2(x+38,61),Vector2(x,74)]),PackedColorArray([fc]))
+		draw_poly(PackedVector2Array([Vector2(x,48),Vector2(x+38,61),Vector2(x,74)]),PackedColorArray([fc]))
 	# Baranda.
 	draw_rect(Rect2(0,157,W,9),Color("#e9d9ac"),true)
 	draw_rect(Rect2(0,169,W,8),Color("#654b38"),true)
@@ -579,25 +579,25 @@ func draw_character(p:Vector2,hc:Color,sc:Color,hairc:Color,beardc:Color):
 		draw_rect(Rect2(p+Vector2(x-11,58),Vector2(20,8)),Color("#141313"),true)
 	draw_ellipse(p+Vector2(-2,7),Vector2(80,39),hc.darkened(0.08))
 	draw_ellipse(p+Vector2(-24,-2),Vector2(54,25),hc.lightened(0.18))
-	draw_polygon(PackedVector2Array([p+Vector2(30,15),p+Vector2(46,-28),p+Vector2(60,-70),p+Vector2(88,-69),p+Vector2(100,-40),p+Vector2(73,-7),p+Vector2(60,20)]),PackedColorArray([hc,hc.lightened(0.14),hc,hc.darkened(0.08),hc,hc,hc]))
+	draw_poly(PackedVector2Array([p+Vector2(30,15),p+Vector2(46,-28),p+Vector2(60,-70),p+Vector2(88,-69),p+Vector2(100,-40),p+Vector2(73,-7),p+Vector2(60,20)]),PackedColorArray([hc,hc.lightened(0.14),hc,hc.darkened(0.08),hc,hc,hc]))
 	draw_ellipse(p+Vector2(84,-54),Vector2(28,22),hc.lightened(0.10))
 	draw_ellipse(p+Vector2(105,-45),Vector2(19,14),hc.lightened(0.16))
 	draw_circle(p+Vector2(113,-43),4,Color("#111"))
 	draw_circle(p+Vector2(114,-44),1.5,WHITE)
-	draw_polygon(PackedVector2Array([p+Vector2(67,-68),p+Vector2(67,-98),p+Vector2(83,-71)]),PackedColorArray([hc,hc.lightened(0.1),hc]))
-	draw_polygon(PackedVector2Array([p+Vector2(88,-69),p+Vector2(105,-94),p+Vector2(101,-58)]),PackedColorArray([hc.darkened(0.05),hc,hc]))
+	draw_poly(PackedVector2Array([p+Vector2(67,-68),p+Vector2(67,-98),p+Vector2(83,-71)]),PackedColorArray([hc,hc.lightened(0.1),hc]))
+	draw_poly(PackedVector2Array([p+Vector2(88,-69),p+Vector2(105,-94),p+Vector2(101,-58)]),PackedColorArray([hc.darkened(0.05),hc,hc]))
 	for i in range(8):
 		draw_line(p+Vector2(43+i*6,-58-i*2),p+Vector2(30+i*5,-38+i*2),hairc,5)
-	draw_polygon(PackedVector2Array([p+Vector2(-40,-17),p+Vector2(25,-18),p+Vector2(31,-4),p+Vector2(-32,0)]),PackedColorArray([Color("#5e321f"),Color("#9b6036"),Color("#6e3b23"),Color("#41251b")]))
+	draw_poly(PackedVector2Array([p+Vector2(-40,-17),p+Vector2(25,-18),p+Vector2(31,-4),p+Vector2(-32,0)]),PackedColorArray([Color("#5e321f"),Color("#9b6036"),Color("#6e3b23"),Color("#41251b")]))
 	draw_rect(Rect2(p+Vector2(-25,-4),Vector2(49,9)),Color("#d9ae58"),true)
 	draw_line(p+Vector2(-7,-2),p+Vector2(-7,29),Color("#2b211c"),5)
 	var shirts=[Color("#254f70"),Color("#b72f3d"),Color("#1e7055"),Color("#d3a43f"),Color("#5c3c8c"),Color("#e5e0d4")]
 	draw_line(p+Vector2(-10,-25),p+Vector2(-18,10),Color("#20252b"),9)
 	draw_line(p+Vector2(12,-25),p+Vector2(28,10),Color("#20252b"),9)
-	draw_polygon(PackedVector2Array([p+Vector2(-24,-58),p+Vector2(20,-58),p+Vector2(16,-25),p+Vector2(-17,-25)]),PackedColorArray([shirts[shirt_index],shirts[shirt_index].lightened(0.12),shirts[shirt_index],shirts[shirt_index].darkened(0.12)]))
+	draw_poly(PackedVector2Array([p+Vector2(-24,-58),p+Vector2(20,-58),p+Vector2(16,-25),p+Vector2(-17,-25)]),PackedColorArray([shirts[shirt_index],shirts[shirt_index].lightened(0.12),shirts[shirt_index],shirts[shirt_index].darkened(0.12)]))
 	draw_circle(p+Vector2(-2,-70),18,sc)
 	draw_circle(p+Vector2(3,-73),11,sc.lightened(0.08))
-	draw_polygon(PackedVector2Array([p+Vector2(-18,-79),p+Vector2(-10,-94),p+Vector2(11,-94),p+Vector2(18,-80),p+Vector2(5,-84),p+Vector2(-7,-82)]),PackedColorArray([hairc,hairc.lightened(0.1),hairc,hairc.darkened(0.15)]))
+	draw_poly(PackedVector2Array([p+Vector2(-18,-79),p+Vector2(-10,-94),p+Vector2(11,-94),p+Vector2(18,-80),p+Vector2(5,-84),p+Vector2(-7,-82)]),PackedColorArray([hairc,hairc.lightened(0.1),hairc,hairc.darkened(0.15)]))
 	draw_line(p+Vector2(13,-48),p+Vector2(44,-28),sc,7)
 	draw_line(p+Vector2(-8,-48),p+Vector2(34,-27),sc,7)
 	draw_circle(p+Vector2(44,-28),5,sc)
@@ -635,8 +635,8 @@ func draw_bull(p:Vector2,c:Color):
 	draw_circle(p+Vector2(113,-34),5,Color("#101010"))
 	draw_circle(p+Vector2(114,-35),2,WHITE)
 	draw_circle(p+Vector2(124,-17),5,Color("#111"))
-	draw_polygon(PackedVector2Array([p+Vector2(84,-47),p+Vector2(76,-70),p+Vector2(97,-53)]),PackedColorArray([c,c.lightened(0.1),c]))
-	draw_polygon(PackedVector2Array([p+Vector2(111,-48),p+Vector2(130,-69),p+Vector2(127,-43)]),PackedColorArray([c,c.darkened(0.05),c]))
+	draw_poly(PackedVector2Array([p+Vector2(84,-47),p+Vector2(76,-70),p+Vector2(97,-53)]),PackedColorArray([c,c.lightened(0.1),c]))
+	draw_poly(PackedVector2Array([p+Vector2(111,-48),p+Vector2(130,-69),p+Vector2(127,-43)]),PackedColorArray([c,c.darkened(0.05),c]))
 	draw_line(p+Vector2(102,-51),p+Vector2(126,-77),Color("#f1e4bd"),8)
 	draw_line(p+Vector2(126,-77),p+Vector2(140,-81),Color("#c6b48b"),5)
 	draw_line(p+Vector2(119,-49),p+Vector2(145,-70),Color("#f1e4bd"),8)
@@ -647,12 +647,17 @@ func draw_bull(p:Vector2,c:Color):
 		draw_circle(p+Vector2(-78+i*15,66+(i%3)*5),2+(i%3),Color(0.98,0.80,0.58,0.16))
 
 
+func draw_poly(points:PackedVector2Array, colors:PackedColorArray):
+	if colors.size() > 0:
+		draw_colored_polygon(points, colors[0])
+
+
 func draw_ellipse(center:Vector2,r:Vector2,c:Color):
 	var pts=PackedVector2Array()
 	for i in range(32):
 		var a=TAU*i/32.0
 		pts.append(center+Vector2(cos(a)*r.x,sin(a)*r.y))
-	draw_polygon(pts,c)
+	draw_poly(pts,c)
 
 func draw_result():
 	title("FIN DEL TURNO",70,44)
