@@ -623,9 +623,10 @@ func draw_character(p:Vector2, hc:Color, sc:Color, hairc:Color, beardc:Color):
 	# Coleador encima de la silla
 	draw_circle(p+Vector2(-3,-42),17,sc)
 	draw_rect(Rect2(p+Vector2(-19,-61),Vector2(34,8)),hairc,true)
+	var shirt_colors=[Color("#274e68"),Color("#b8323e"),Color("#1f6b52"),Color("#d4a13a"),Color("#5d3c8a"),Color("#e6e1d2")]
 	draw_colored_polygon(PackedVector2Array([
 		p+Vector2(-22,-52),p+Vector2(20,-52),p+Vector2(15,-24),p+Vector2(-16,-24)
-	]),Color("#274e68"))
+	]),shirt_colors[shirt_index])
 	draw_line(p+Vector2(-14,-24),p+Vector2(-28,7),Color("#274e68"),8)
 	draw_line(p+Vector2(12,-24),p+Vector2(29,5),Color("#274e68"),8)
 	# Brazos y riendas
@@ -633,10 +634,32 @@ func draw_character(p:Vector2, hc:Color, sc:Color, hairc:Color, beardc:Color):
 	draw_line(p+Vector2(45,-25),p+Vector2(82,-42),Color("#d8b26c"),3)
 	draw_line(p+Vector2(0,-43),p+Vector2(38,-27),Color("#d8b26c"),3)
 	# Barba configurable
-	if hair_style==1:
+	if beard_style_index==1:
 		draw_circle(p+Vector2(92,-37),8,beardc)
-	elif hair_style==2:
+	elif beard_style_index==2:
 		draw_line(p+Vector2(83,-35),p+Vector2(99,-30),beardc,6)
+	elif beard_style_index==3:
+		draw_line(p+Vector2(84,-36),p+Vector2(98,-32),beardc,9)
+		draw_line(p+Vector2(89,-30),p+Vector2(89,-22),beardc,5)
+	elif beard_style_index==4:
+		draw_line(p+Vector2(83,-35),p+Vector2(100,-35),beardc,5)
+		draw_line(p+Vector2(87,-30),p+Vector2(96,-30),beardc,5)
+	elif beard_style_index==5:
+		draw_circle(p+Vector2(89,-33),10,beardc)
+	# Sombrero
+	if hat_index==1:
+		draw_arc(p+Vector2(-2,-66),26,PI,TAU,24,Color("#6a3b22"),8)
+		draw_line(p+Vector2(-34,-66),p+Vector2(30,-66),Color("#4b2b1b"),7)
+	elif hat_index==2:
+		draw_arc(p+Vector2(-2,-64),23,PI,TAU,24,Color("#d5ad62"),8)
+		draw_line(p+Vector2(-38,-64),p+Vector2(34,-64),Color("#8d6735"),6)
+	elif hat_index==3:
+		draw_rect(Rect2(p+Vector2(-27,-72),Vector2(50,9)),Color("#1c1d20"),true)
+		draw_rect(Rect2(p+Vector2(-15,-91),Vector2(26,20)),Color("#25272a"),true)
+	elif hat_index==4:
+		draw_arc(p+Vector2(-2,-65),25,PI,TAU,24,Color("#b34a36"),9)
+		draw_line(p+Vector2(-38,-65),p+Vector2(34,-65),Color("#7e3026"),6)
+
 	# Cola del caballo
 	draw_line(p+Vector2(-68,2),p+Vector2(-94,-20),hairc,7)
 	draw_line(p+Vector2(-92,-19),p+Vector2(-106,-3),hairc,5)
