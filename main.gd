@@ -59,6 +59,9 @@ var horse_names := ["Alazán", "Negro", "Palomino", "Tordillo", "Zaino", "Bayo"]
 var bull_colors := [Color("#302820"), Color("#5c4636"), Color("#181818"), Color("#765d47")]
 var bull_names := ["Castaño", "Colorado", "Negro", "Barcino"]
 var coins := 1500
+var owned_horses := [true, false, false, false, false, false]
+var combo := 0
+var best_combo := 0
 var skin_index := 1
 var hair_style_index := 0
 var beard_style_index := 0
@@ -112,6 +115,9 @@ func _ready():
 func save_state():
 	var data = {
 		"coins": coins,
+		"owned_horses": owned_horses,
+		"combo": combo,
+		"best_combo": best_combo,
 		"selected_horse": selected_horse,
 		"selected_bull": selected_bull,
 		"skin_index": skin_index,
@@ -148,6 +154,12 @@ func load_state():
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return
 	coins = int(parsed.get("coins", coins))
+	var saved_horses = parsed.get("owned_horses", owned_horses)
+	if saved_horses is Array:
+		for i in range(min(saved_horses.size(), owned_horses.size())):
+			owned_horses[i] = bool(saved_horses[i])
+	combo = int(parsed.get("combo", combo))
+	best_combo = int(parsed.get("best_combo", best_combo))
 	selected_horse = int(parsed.get("selected_horse", selected_horse))
 	selected_bull = int(parsed.get("selected_bull", selected_bull))
 	skin_index = int(parsed.get("skin_index", skin_index))
@@ -290,8 +302,11 @@ func activate_button(id: String):
 		"prev_horse":
 			selected_horse=(selected_horse-1+horse_names.size())%horse_names.size()
 		"buy_horse":
-			if coins >= 500 and selected_horse != 0:
+			if owned_horses[selected_horse]:
+				pass
+			elif coins >= 500:
 				coins -= 500
+				owned_horses[selected_horse] = true
 		"next_bull":
 			selected_bull=(selected_bull+1)%bull_names.size()
 		"prev_bull":
@@ -357,10 +372,13 @@ func start_game():
 	grabbed=false
 	qte_active=false
 	qte_result=""
+	combo=0
 	player=Vector2(320,390)
 	bull=Vector2(820,360)
-	player_vel=Vector2(120,0)
-	bull_vel=Vector2(-55,0)
+	var horse_speed=[1.10,0.96,1.04,0.92,1.07,1.12][selected_horse]
+	var bull_speed=[55.0,62.0,70.0,66.0][selected_bull]
+	player_vel=Vector2(120*horse_speed,0)
+	bull_vel=Vector2(-bull_speed,0)
 	championship_status="EN CURSO"
 	animation_state="ride"
 	animation_timer=0.0
@@ -373,7 +391,8 @@ func update_game(delta):
 	qte_cooldown=max(0.0,qte_cooldown-delta)
 	var move=Input.get_vector("move_left","move_right","move_up","move_down")
 	if move.length()>0:
-		player_vel=move*190.0
+		var horse_control=[1.08,0.94,1.02,0.90,1.05,1.10][selected_horse]
+		player_vel=move*190.0*horse_control
 	elif player_vel.length()>0:
 		player_vel=player_vel.move_toward(Vector2.ZERO,75.0*delta)
 	if Input.is_action_pressed("action_accel"):
@@ -391,6 +410,7 @@ func update_game(delta):
 		qte_active=true
 		qte_pos=Vector2(randf_range(420,940),randf_range(210,500))
 		qte_radius=92
+		qte_speed=[68.0,74.0,84.0,78.0][selected_bull]
 		qte_result=""
 	if qte_active:
 		qte_radius=max(18,qte_radius-qte_speed*delta)
@@ -436,11 +456,12 @@ func reset_campaign():
 func finish_championship_turn():
 	total_score += score
 	championship_points += score * 10.0
-	# CPU fuerte: rivales con efectividad alta y una pequeña variación por turno.
+	# CPU fuerte e independiente: cada rival obtiene su propia actuación.
 	for i in range(rival_points.size()):
-		var base=max(2.0, score * rival_skill[i])
-		var pressure=randf_range(0.8, 3.8) * rival_skill[i]
-		rival_points[i] += base + pressure
+		var performance=randf_range(2.4, 5.2) * rival_skill[i]
+		if i == 3:
+			performance += 0.6
+		rival_points[i] += performance
 	var table=[]
 	table.append({"name":"TÚ • "+club_names[selected_club],"points":championship_points,"player":true})
 	for i in range(rival_names.size()):
@@ -501,6 +522,12 @@ func resolve_grab(result:String, points:float, success:bool):
 	qte_active=false
 	qte_cooldown=1.5
 	qte_result=result
+	if success:
+		combo += 1
+		best_combo=max(best_combo,combo)
+		points += min(2.0, float(combo-1)*0.25)
+	else:
+		combo=0
 	score += points
 	animation_result=result
 	animation_score_popup=points
@@ -837,7 +864,8 @@ func draw_result():
 	draw_string(font,Vector2(680,235),"TU POSICIÓN",HORIZONTAL_ALIGNMENT_LEFT,-1,16,MUTED)
 	draw_string(font,Vector2(680,275),"#%d / 9"%player_championship_position,HORIZONTAL_ALIGNMENT_LEFT,-1,52,GOLD)
 	draw_string(font,Vector2(680,330),"CPU: DIFÍCIL",HORIZONTAL_ALIGNMENT_LEFT,-1,22,RED)
-	draw_string(font,Vector2(680,365),"Los rivales tienen alta efectividad.",HORIZONTAL_ALIGNMENT_LEFT,500,17,MUTED)
+	draw_string(font,Vector2(680,365),"CPU: actuaciones independientes y alta dificultad.",HORIZONTAL_ALIGNMENT_LEFT,500,17,MUTED)
+	draw_string(font,Vector2(680,395),"MEJOR COMBO: x%d"%best_combo,HORIZONTAL_ALIGNMENT_LEFT,-1,18,GOLD)
 	var msg="¡Clasificaste! Prepárate para la siguiente ronda."
 	if championship_status=="ELIMINADO": msg="El CPU fue superior. Repite la ronda y mejora tu técnica."
 	elif championship_status=="CAMPEÓN": msg="¡CAMPEÓN NACIONAL! Dominaste la clasificación."
@@ -887,7 +915,8 @@ func draw_horses():
 	draw_rect(Rect2(955,408,140+(selected_horse%3)*20,12),Color("#63b9df"),true)
 	
 	draw_string(font,Vector2(825,468),"VALOR: 500 MONEDAS",HORIZONTAL_ALIGNMENT_LEFT,-1,20,GOLD)
-	draw_string(font,Vector2(825,510),"SELECCIONADO" if selected_horse==0 else "DISPONIBLE",HORIZONTAL_ALIGNMENT_LEFT,-1,17,GREEN if selected_horse==0 else MUTED)
+	var horse_status="SELECCIONADO" if selected_horse==0 else ("EN TU CUADRA" if owned_horses[selected_horse] else "BLOQUEADO • COMPRA POR 500")
+	draw_string(font,Vector2(825,510),horse_status,HORIZONTAL_ALIGNMENT_LEFT,390,17,GREEN if owned_horses[selected_horse] else RED)
 	draw_button(Rect2(850,620,300,55),"VOLVER","back")
 
 func draw_bulls():
@@ -1054,7 +1083,7 @@ func draw_profile():
 	draw_string(font,Vector2(0,285),"Club: %s"%club_names[selected_club],HORIZONTAL_ALIGNMENT_CENTER,W,20,WHITE)
 	draw_string(font,Vector2(0,320),"Categoría: %s  •  Manga: %s" % [category_names[selected_category], venue_names[selected_venue]],HORIZONTAL_ALIGNMENT_CENTER,W,20,MUTED)
 	draw_string(font,Vector2(0,355),"Torneos disputados: %d"%championship_turns,HORIZONTAL_ALIGNMENT_CENTER,W,20,MUTED)
-	draw_string(font,Vector2(0,390),"Caballo: %s"%horse_names[selected_horse],HORIZONTAL_ALIGNMENT_CENTER,W,22,MUTED)
+	draw_string(font,Vector2(0,390),"Caballo: %s  •  Combo máximo: x%d" % [horse_names[selected_horse],best_combo],HORIZONTAL_ALIGNMENT_CENTER,W,22,MUTED)
 	draw_string(font,Vector2(0,300),"Modo: Campeonato Nacional",HORIZONTAL_ALIGNMENT_CENTER,W,22,MUTED)
 	draw_button(Rect2(470,630,340,55),"VOLVER","back")
 
