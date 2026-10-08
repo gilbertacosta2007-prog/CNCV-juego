@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="300" viewBox="0 0 420 300">
+<defs>
+ <linearGradient id="h" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b56b32"/><stop offset=".48" stop-color="#7b3f22"/><stop offset="1" stop-color="#3b2015"/></linearGradient>
+ <linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e4b85d"/><stop offset="1" stop-color="#76502a"/></linearGradient>
+ <filter id="shadow"><feGaussianBlur stdDeviation="5"/></filter>
+</defs>
+<ellipse cx="202" cy="259" rx="154" ry="20" fill="#111" opacity=".32" filter="url(#shadow)"/>
+<!-- legs -->
+<g stroke="#3b2015" stroke-width="18" stroke-linecap="round">
+ <path d="M83 183 L76 244"/><path d="M132 186 L126 249"/><path d="M238 184 L249 246"/><path d="M286 177 L303 239"/>
+</g>
+<g stroke="#d49a56" stroke-width="7" stroke-linecap="round">
+ <path d="M76 244 L66 257"/><path d="M126 249 L117 261"/><path d="M249 246 L257 258"/><path d="M303 239 L316 250"/>
+</g>
+<!-- horse body -->
+<ellipse cx="178" cy="150" rx="125" ry="66" fill="url(#h)" stroke="#28150e" stroke-width="7"/>
+<path d="M72 133 C38 107 46 65 81 43 C104 29 136 39 154 67 L142 116 Z" fill="#6d371d" stroke="#28150e" stroke-width="7"/>
+<path d="M68 70 C44 51 37 28 50 16 C72 31 89 42 98 66" fill="#21140f"/>
+<!-- neck/head -->
+<path d="M257 137 C283 102 289 60 315 40 C340 20 376 33 383 60 C389 84 367 105 341 106 L314 159 Z" fill="url(#h)" stroke="#28150e" stroke-width="7"/>
+<path d="M323 48 L348 25 L360 55" fill="#3f2116" stroke="#28150e" stroke-width="6"/>
+<ellipse cx="359" cy="67" rx="9" ry="7" fill="#fff"/><circle cx="361" cy="68" r="4" fill="#101010"/>
+<path d="M378 72 Q405 79 386 91 Q366 96 350 89" fill="#4b2417" stroke="#28150e" stroke-width="5"/>
+<!-- saddle -->
+<path d="M123 103 Q183 77 236 107 L228 142 Q171 123 119 143 Z" fill="#c69a54" stroke="#412a18" stroke-width="7"/>
+<path d="M126 121 Q178 111 229 130" fill="none" stroke="#6e4725" stroke-width="7"/>
+<!-- rider -->
+<ellipse cx="177" cy="70" rx="29" ry="35" fill="#8a5a3b" stroke="#2b1913" stroke-width="6"/>
+<path d="M146 60 Q176 23 207 56 L199 68 Q175 55 151 72 Z" fill="#241812"/>
+<path d="M136 47 Q176 25 218 48 L211 60 Q176 48 142 62 Z" fill="#b77b38" stroke="#4d2c18" stroke-width="6"/>
+<path d="M143 111 L154 75 L205 75 L218 119 Z" fill="#254f70" stroke="#172a39" stroke-width="7"/>
+<path d="M148 105 L113 137" stroke="#8a5a3b" stroke-width="12" stroke-linecap="round"/>
+<path d="M204 103 L241 127" stroke="#8a5a3b" stroke-width="12" stroke-linecap="round"/>
+<path d="M232 128 L292 102" stroke="#e2bf72" stroke-width="5"/>
+<!-- reins -->
+<path d="M205 102 Q253 128 315 101" fill="none" stroke="#e2bf72" stroke-width="4"/>
+<!-- mane -->
+<path d="M274 73 Q250 55 260 28 Q278 43 291 48 Q281 26 296 13 Q310 37 312 52" fill="#241812"/>
+<!-- highlights -->
+<path d="M102 116 Q174 87 236 113" fill="none" stroke="#d8944d" stroke-width="9" opacity=".65"/>
+</svg>
