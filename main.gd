@@ -582,117 +582,86 @@ func draw_game():
 	draw_string(font,Vector2(940,H-64),"ACELERAR  ▶",HORIZONTAL_ALIGNMENT_LEFT,-1,18,WHITE)
 
 func draw_speed_dust(p:Vector2):
+	for i in range(20):
+		var off=Vector2(-48-i*9,28+(i%5)*7)
+		draw_circle(p+off,2+(i%4),Color(0.98,0.82,0.58,0.11+(i%4)*0.025))
+
+
+func draw_character(p:Vector2,hc:Color,sc:Color,hairc:Color,beardc:Color):
+	draw_ellipse(p+Vector2(8,51),Vector2(96,20),Color(0.03,0.02,0.015,0.38))
+	var dark=hc.darkened(0.38)
+	for x in [-44.0,-16.0,18.0,48.0]:
+		draw_line(p+Vector2(x,12),p+Vector2(x-3,48),dark,11)
+		draw_line(p+Vector2(x-3,44),p+Vector2(x-7,61),hc.darkened(0.18),8)
+		draw_rect(Rect2(p+Vector2(x-11,58),Vector2(20,8)),Color("#141313"),true)
+	draw_ellipse(p+Vector2(-2,7),Vector2(80,39),hc.darkened(0.08))
+	draw_ellipse(p+Vector2(-24,-2),Vector2(54,25),hc.lightened(0.18))
+	draw_polygon(PackedVector2Array([p+Vector2(30,15),p+Vector2(46,-28),p+Vector2(60,-70),p+Vector2(88,-69),p+Vector2(100,-40),p+Vector2(73,-7),p+Vector2(60,20)]),PackedColorArray([hc,hc.lightened(0.14),hc,hc.darkened(0.08),hc,hc,hc]))
+	draw_ellipse(p+Vector2(84,-54),Vector2(28,22),hc.lightened(0.10))
+	draw_ellipse(p+Vector2(105,-45),Vector2(19,14),hc.lightened(0.16))
+	draw_circle(p+Vector2(113,-43),4,Color("#111"))
+	draw_circle(p+Vector2(114,-44),1.5,WHITE)
+	draw_colored_polygon(PackedVector2Array([p+Vector2(67,-68),p+Vector2(67,-98),p+Vector2(83,-71)]),PackedColorArray([hc,hc.lightened(0.1),hc]))
+	draw_colored_polygon(PackedVector2Array([p+Vector2(88,-69),p+Vector2(105,-94),p+Vector2(101,-58)]),PackedColorArray([hc.darkened(0.05),hc,hc]))
 	for i in range(8):
-		var off=Vector2(-55-i*11,24+(i%3)*8)
-		var r=3+(i%3)*2
-		draw_circle(p+off,r,Color(0.95,0.82,0.62,0.12+(i%3)*0.025))
-
-func draw_character(p:Vector2, hc:Color, sc:Color, hairc:Color, beardc:Color):
-	# Sombra de contacto
-	draw_ellipse(p+Vector2(0,45),Vector2(78,16),Color(0.10,0.06,0.04,0.28))
-	# Patas y cascos
-	for leg_x in [-38.0,-10.0,18.0,45.0]:
-		draw_line(p+Vector2(leg_x,18),p+Vector2(leg_x-4,60),Color("#3a251c"),9)
-		draw_rect(Rect2(p+Vector2(leg_x-9,57),Vector2(18,7)),Color("#1b1716"),true)
-	# Cuerpo del caballo
-	draw_ellipse(p+Vector2(0,8),Vector2(72,34),hc)
-	draw_ellipse(p+Vector2(-28,-3),Vector2(40,25),hc.lightened(0.12))
-	# Cuello y cabeza
-	draw_polygon(PackedVector2Array([
-		p+Vector2(36,-12),p+Vector2(57,-61),p+Vector2(88,-67),p+Vector2(97,-43),p+Vector2(73,-18)
-	]),PackedColorArray([hc,hc.lightened(0.1),hc,hc]))
-	draw_circle(p+Vector2(82,-51),24,hc.lightened(0.08))
-	# Orejas
-	draw_colored_polygon(PackedVector2Array([
-		p+Vector2(70,-67),p+Vector2(70,-93),p+Vector2(82,-70)
-	]),hc)
-	draw_colored_polygon(PackedVector2Array([
-		p+Vector2(88,-68),p+Vector2(100,-91),p+Vector2(101,-58)
-	]),hc.darkened(0.05))
-	# Crin
-	for i in range(5):
-		draw_line(p+Vector2(48+i*7,-57-i*2),p+Vector2(36+i*5,-42+i*3),hairc,5)
-	# Ojo y hocico
-	draw_circle(p+Vector2(90,-55),4,Color("#10151a"))
-	draw_circle(p+Vector2(91,-56),1.5,WHITE)
-	draw_circle(p+Vector2(101,-43),8,hc.lightened(0.18))
-	# Silla y cincha
-	draw_rect(Rect2(p+Vector2(-28,-12),Vector2(58,11)),Color("#6b3825"),true)
-	draw_rect(Rect2(p+Vector2(-17,-2),Vector2(42,8)),Color("#d9ad57"),true)
-	draw_line(p+Vector2(-8,-4),p+Vector2(-8,28),Color("#35231c"),4)
-	# Coleador encima de la silla
-	draw_circle(p+Vector2(-3,-42),17,sc)
-	draw_rect(Rect2(p+Vector2(-19,-61),Vector2(34,8)),hairc,true)
-	var shirt_colors=[Color("#274e68"),Color("#b8323e"),Color("#1f6b52"),Color("#d4a13a"),Color("#5d3c8a"),Color("#e6e1d2")]
-	draw_colored_polygon(PackedVector2Array([
-		p+Vector2(-22,-52),p+Vector2(20,-52),p+Vector2(15,-24),p+Vector2(-16,-24)
-	]),shirt_colors[shirt_index])
-	draw_line(p+Vector2(-14,-24),p+Vector2(-28,7),Color("#274e68"),8)
-	draw_line(p+Vector2(12,-24),p+Vector2(29,5),Color("#274e68"),8)
-	# Brazos y riendas
-	draw_line(p+Vector2(12,-45),p+Vector2(45,-25),sc,6)
-	draw_line(p+Vector2(45,-25),p+Vector2(82,-42),Color("#d8b26c"),3)
-	draw_line(p+Vector2(0,-43),p+Vector2(38,-27),Color("#d8b26c"),3)
-	# Barba configurable
-	if beard_style_index==1:
-		draw_circle(p+Vector2(92,-37),8,beardc)
-	elif beard_style_index==2:
-		draw_line(p+Vector2(83,-35),p+Vector2(99,-30),beardc,6)
+		draw_line(p+Vector2(43+i*6,-58-i*2),p+Vector2(30+i*5,-38+i*2),hairc,5)
+	draw_colored_polygon(PackedVector2Array([p+Vector2(-40,-17),p+Vector2(25,-18),p+Vector2(31,-4),p+Vector2(-32,0)]),PackedColorArray([Color("#5e321f"),Color("#9b6036"),Color("#6e3b23"),Color("#41251b")]))
+	draw_rect(Rect2(p+Vector2(-25,-4),Vector2(49,9)),Color("#d9ae58"),true)
+	draw_line(p+Vector2(-7,-2),p+Vector2(-7,29),Color("#2b211c"),5)
+	var shirts=[Color("#254f70"),Color("#b72f3d"),Color("#1e7055"),Color("#d3a43f"),Color("#5c3c8c"),Color("#e5e0d4")]
+	draw_line(p+Vector2(-10,-25),p+Vector2(-18,10),Color("#20252b"),9)
+	draw_line(p+Vector2(12,-25),p+Vector2(28,10),Color("#20252b"),9)
+	draw_colored_polygon(PackedVector2Array([p+Vector2(-24,-58),p+Vector2(20,-58),p+Vector2(16,-25),p+Vector2(-17,-25)]),PackedColorArray([shirts[shirt_index],shirts[shirt_index].lightened(0.12),shirts[shirt_index],shirts[shirt_index].darkened(0.12)]))
+	draw_circle(p+Vector2(-2,-70),18,sc)
+	draw_circle(p+Vector2(3,-73),11,sc.lightened(0.08))
+	draw_colored_polygon(PackedVector2Array([p+Vector2(-18,-79),p+Vector2(-10,-94),p+Vector2(11,-94),p+Vector2(18,-80),p+Vector2(5,-84),p+Vector2(-7,-82)]),PackedColorArray([hairc,hairc.lightened(0.1),hairc,hairc.darkened(0.15)]))
+	draw_line(p+Vector2(13,-48),p+Vector2(44,-28),sc,7)
+	draw_line(p+Vector2(-8,-48),p+Vector2(34,-27),sc,7)
+	draw_circle(p+Vector2(44,-28),5,sc)
+	draw_line(p+Vector2(34,-27),p+Vector2(82,-43),Color("#d9b66b"),3)
+	if beard_style_index==1: draw_circle(p+Vector2(7,-59),8,beardc)
+	elif beard_style_index==2: draw_line(p+Vector2(0,-59),p+Vector2(13,-57),beardc,5)
 	elif beard_style_index==3:
-		draw_line(p+Vector2(84,-36),p+Vector2(98,-32),beardc,9)
-		draw_line(p+Vector2(89,-30),p+Vector2(89,-22),beardc,5)
-	elif beard_style_index==4:
-		draw_line(p+Vector2(83,-35),p+Vector2(100,-35),beardc,5)
-		draw_line(p+Vector2(87,-30),p+Vector2(96,-30),beardc,5)
-	elif beard_style_index==5:
-		draw_circle(p+Vector2(89,-33),10,beardc)
-	# Sombrero
-	if hat_index==1:
-		draw_arc(p+Vector2(-2,-66),26,PI,TAU,24,Color("#6a3b22"),8)
-		draw_line(p+Vector2(-34,-66),p+Vector2(30,-66),Color("#4b2b1b"),7)
-	elif hat_index==2:
-		draw_arc(p+Vector2(-2,-64),23,PI,TAU,24,Color("#d5ad62"),8)
-		draw_line(p+Vector2(-38,-64),p+Vector2(34,-64),Color("#8d6735"),6)
-	elif hat_index==3:
-		draw_rect(Rect2(p+Vector2(-27,-72),Vector2(50,9)),Color("#1c1d20"),true)
-		draw_rect(Rect2(p+Vector2(-15,-91),Vector2(26,20)),Color("#25272a"),true)
-	elif hat_index==4:
-		draw_arc(p+Vector2(-2,-65),25,PI,TAU,24,Color("#b34a36"),9)
-		draw_line(p+Vector2(-38,-65),p+Vector2(34,-65),Color("#7e3026"),6)
+		draw_line(p+Vector2(0,-60),p+Vector2(15,-57),beardc,8)
+		draw_line(p+Vector2(6,-55),p+Vector2(7,-48),beardc,5)
+	elif beard_style_index==4: draw_line(p+Vector2(-1,-59),p+Vector2(14,-59),beardc,5)
+	elif beard_style_index==5: draw_circle(p+Vector2(7,-57),10,beardc)
+	if hat_index>0:
+		var hats=[Color("#6a3b22"),Color("#d5ad62"),Color("#1c1d20"),Color("#b34a36")]
+		var hatc=hats[hat_index-1]
+		draw_ellipse(p+Vector2(-2,-93),Vector2(39,9),hatc.darkened(0.18))
+		draw_rect(Rect2(p+Vector2(-18,-107),Vector2(33,18)),hatc,true)
+		draw_ellipse(p+Vector2(-2,-107),Vector2(17,6),hatc.lightened(0.1))
+		draw_rect(Rect2(p+Vector2(-19,-93),Vector2(35,4)),Color("#4a2e20"),true)
+	draw_line(p+Vector2(-73,2),p+Vector2(-101,-21),hairc,8)
+	draw_line(p+Vector2(-98,-21),p+Vector2(-114,-4),hairc,6)
 
-	# Cola del caballo
-	draw_line(p+Vector2(-68,2),p+Vector2(-94,-20),hairc,7)
-	draw_line(p+Vector2(-92,-19),p+Vector2(-106,-3),hairc,5)
 
 func draw_bull(p:Vector2,c:Color):
-	# Sombra
-	draw_ellipse(p+Vector2(0,48),Vector2(86,15),Color(0.10,0.06,0.04,0.25))
-	# Patas
-	for leg_x in [-55.0,-22.0,22.0,57.0]:
-		draw_line(p+Vector2(leg_x,18),p+Vector2(leg_x-3,62),c.darkened(0.28),10)
-		draw_rect(Rect2(p+Vector2(leg_x-8,58),Vector2(16,7)),Color("#191817"),true)
-	# Tronco musculoso
-	draw_ellipse(p,Vector2(86,39),c)
-	draw_ellipse(p+Vector2(-18,-5),Vector2(55,28),c.lightened(0.10))
-	# Cuello y cabeza
-	draw_ellipse(p+Vector2(70,-13),Vector2(34,31),c.darkened(0.05))
-	draw_ellipse(p+Vector2(94,-22),Vector2(37,28),c)
-	# Cuernos
-	draw_line(p+Vector2(104,-43),p+Vector2(128,-69),Color("#eee1bd"),7)
-	draw_line(p+Vector2(122,-45),p+Vector2(148,-64),Color("#eee1bd"),7)
-	draw_line(p+Vector2(128,-69),p+Vector2(136,-75),Color("#cbb98e"),4)
-	draw_line(p+Vector2(148,-64),p+Vector2(156,-68),Color("#cbb98e"),4)
-	# Ojo, nariz y frente
-	draw_circle(p+Vector2(113,-27),5,Color("#111214"))
-	draw_circle(p+Vector2(114,-28),2,WHITE)
-	draw_circle(p+Vector2(124,-10),7,c.darkened(0.2))
-	draw_circle(p+Vector2(127,-9),2,Color("#151515"))
-	# Cola con punta de pelo
-	draw_line(p+Vector2(-82,2),p+Vector2(-125,22),c.darkened(0.18),8)
-	draw_line(p+Vector2(-124,22),p+Vector2(-139,14),Color("#211a16"),7)
-	# Destellos de polvo en patas
-	for i in range(6):
-		draw_circle(p+Vector2(-60+i*22,64+(i%2)*5),3,Color(0.95,0.78,0.56,0.22))
+	draw_ellipse(p+Vector2(4,54),Vector2(104,19),Color(0.03,0.02,0.015,0.38))
+	var dark=c.darkened(0.34)
+	for x in [-59.0,-28.0,25.0,59.0]:
+		draw_line(p+Vector2(x,17),p+Vector2(x-3,49),dark,12)
+		draw_line(p+Vector2(x-3,45),p+Vector2(x-6,64),c.darkened(0.18),8)
+		draw_rect(Rect2(p+Vector2(x-10,61),Vector2(20,8)),Color("#141313"),true)
+	draw_ellipse(p+Vector2(-5,2),Vector2(99,44),c.darkened(0.08))
+	draw_ellipse(p+Vector2(-30,-6),Vector2(61,29),c.lightened(0.11))
+	draw_ellipse(p+Vector2(69,-18),Vector2(40,35),c.darkened(0.03))
+	draw_ellipse(p+Vector2(101,-27),Vector2(40,31),c)
+	draw_ellipse(p+Vector2(120,-16),Vector2(25,19),c.lightened(0.08))
+	draw_circle(p+Vector2(113,-34),5,Color("#101010"))
+	draw_circle(p+Vector2(114,-35),2,WHITE)
+	draw_circle(p+Vector2(124,-17),5,Color("#111"))
+	draw_colored_polygon(PackedVector2Array([p+Vector2(84,-47),p+Vector2(76,-70),p+Vector2(97,-53)]),PackedColorArray([c,c.lightened(0.1),c]))
+	draw_colored_polygon(PackedVector2Array([p+Vector2(111,-48),p+Vector2(130,-69),p+Vector2(127,-43)]),PackedColorArray([c,c.darkened(0.05),c]))
+	draw_line(p+Vector2(102,-51),p+Vector2(126,-77),Color("#f1e4bd"),8)
+	draw_line(p+Vector2(126,-77),p+Vector2(140,-81),Color("#c6b48b"),5)
+	draw_line(p+Vector2(119,-49),p+Vector2(145,-70),Color("#f1e4bd"),8)
+	draw_line(p+Vector2(145,-70),p+Vector2(159,-72),Color("#c6b48b"),5)
+	draw_line(p+Vector2(-94,2),p+Vector2(-141,25),c.darkened(0.2),8)
+	draw_line(p+Vector2(-141,25),p+Vector2(-157,12),Color("#171313"),8)
+	for i in range(14):
+		draw_circle(p+Vector2(-78+i*15,66+(i%3)*5),2+(i%3),Color(0.98,0.80,0.58,0.16))
 
 
 func draw_ellipse(center:Vector2,r:Vector2,c:Color):
