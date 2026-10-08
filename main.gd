@@ -19,6 +19,11 @@ const DIRT := Color("#9a6844")
 
 var screen := "menu"
 var selected_club := 0
+var selected_category := 0
+var selected_tournament := 0
+var selected_venue := 0
+var championship_points := 0.0
+var championship_turns := 0
 var buttons: Array[Dictionary] = []
 var player := Vector2(360, 380)
 var bull := Vector2(700, 340)
@@ -63,15 +68,13 @@ var club_states := ["Cojedes","Cojedes","Bolívar","Carabobo","Carabobo","Lara",
 var club_categories := ["B / A / AA","B / Master","A","A / B / Femenino","A","AA / Destete","B / A","A"]
 var venue_names := ["Manga Juan Canelón","Manga Don Pedro Maya"]
 var tournament_names := [
-	"Campeonato Categoría C",
-	"Copa 67 Aniversario",
-	"Copa Cheo Hernández Prisco",
-	"Campeonato Categoría B",
-	"Campeonato Categoría A",
-	"Campeonato Categoría AA",
-	"Campeonato Categoría Master",
-	"Campeonato Categoría Supermaster"
+	"Campeonato Categoría C","Copa 67 Aniversario","Copa Cheo Hernández Prisco",
+	"Campeonato Categoría B","Campeonato Categoría A","Campeonato Categoría AA",
+	"Campeonato Categoría Master","Campeonato Categoría Supermaster"
 ]
+var category_names := ["C","B","A","AA","Master","Supermaster"]
+var tournament_dates := ["05–07 DIC 2025","23–25 ENE 2026","20–22 FEB 2026","27–29 MAR 2026","24–26 ABR 2026","29–31 MAY 2026","18–20 SEP 2026","18–20 SEP 2026"]
+var tournament_categories := ["C","C / B / A / AA","C / B / A / AA","B","A","AA","Master","Supermaster"]
 var font: Font
 
 func _ready():
@@ -160,6 +163,18 @@ func activate_button(id: String):
 			selected_club=(selected_club+1)%club_names.size()
 		"prev_club":
 			selected_club=(selected_club-1+club_names.size())%club_names.size()
+		"next_category":
+			selected_category=(selected_category+1)%category_names.size()
+		"prev_category":
+			selected_category=(selected_category-1+category_names.size())%category_names.size()
+		"next_tournament":
+			selected_tournament=(selected_tournament+1)%tournament_names.size()
+		"prev_tournament":
+			selected_tournament=(selected_tournament-1+tournament_names.size())%tournament_names.size()
+		"next_venue":
+			selected_venue=(selected_venue+1)%venue_names.size()
+		"prev_venue":
+			selected_venue=(selected_venue-1+venue_names.size())%venue_names.size()
 		"venue":
 			# La manga se alternará al iniciar la siguiente partida.
 			pass
@@ -168,6 +183,7 @@ func start_game():
 	screen="game"
 	elapsed=0
 	score=0
+	championship_turns += 1
 	grabbed=false
 	qte_active=false
 	qte_result=""
@@ -209,6 +225,7 @@ func update_game(delta):
 		try_grab()
 	if elapsed >= turn_time:
 		total_score += score
+		championship_points += score * 10.0
 		screen="result"
 
 func try_grab():
@@ -704,33 +721,35 @@ func draw_clubs():
 		draw_string(font,Vector2(875,y),club_names[i],HORIZONTAL_ALIGNMENT_LEFT,325,14,GOLD if selected else WHITE)
 
 func draw_tournaments():
-	title("CAMPEONATOS",68,40)
-	draw_string(font,Vector2(55,112),"CALENDARIO NACIONAL",HORIZONTAL_ALIGNMENT_LEFT,-1,25,GOLD)
-	draw_string(font,Vector2(55,140),"Estructura inspirada en el calendario público de FEVECO.",HORIZONTAL_ALIGNMENT_LEFT,-1,17,MUTED)
-	
-	draw_rect(Rect2(45,170,760,420),Color("#102a39"),true)
-	draw_rect(Rect2(45,170,760,420),Color("#3e6070"),false,3)
-	
+	title("CAMPEONATO NACIONAL",68,40)
+	draw_string(font,Vector2(55,112),"ELIGE TU RUTA AL TÍTULO",HORIZONTAL_ALIGNMENT_LEFT,-1,25,GOLD)
+	draw_string(font,Vector2(55,140),"Calendario basado en FEVECO; la competición jugable es propia de CNBC.",HORIZONTAL_ALIGNMENT_LEFT,-1,15,MUTED)
+	draw_rect(Rect2(45,170,650,420),Color("#102a39"),true)
+	draw_rect(Rect2(45,170,650,420),Color("#3e6070"),false,3)
 	for i in tournament_names.size():
-		var y=190+i*48
-		var accent=GOLD if i==2 else Color("#294858")
-		draw_rect(Rect2(70,y,710,38),Color("#132f3e"),true)
-		draw_rect(Rect2(70,y,6,38),accent,true)
-		draw_string(font,Vector2(90,y+26),tournament_names[i],HORIZONTAL_ALIGNMENT_LEFT,-1,17,WHITE)
-		draw_string(font,Vector2(690,y+26),"NACIONAL",HORIZONTAL_ALIGNMENT_LEFT,-1,13,MUTED)
-	
-	draw_rect(Rect2(835,170,400,420),Color("#0d1e2a"),true)
-	draw_rect(Rect2(835,170,400,420),Color("#345365"),false,3)
-	draw_string(font,Vector2(865,215),"MANGAS",HORIZONTAL_ALIGNMENT_LEFT,-1,28,WHITE)
-	draw_string(font,Vector2(865,250),"VENUE SELECCIONADO",HORIZONTAL_ALIGNMENT_LEFT,-1,14,MUTED)
-	draw_string(font,Vector2(865,282),venue_names[0],HORIZONTAL_ALIGNMENT_LEFT,-1,21,GOLD)
-	draw_string(font,Vector2(865,325),"Próxima sede",HORIZONTAL_ALIGNMENT_LEFT,-1,15,MUTED)
-	draw_string(font,Vector2(865,352),venue_names[1],HORIZONTAL_ALIGNMENT_LEFT,-1,21,WHITE)
-	draw_string(font,Vector2(865,405),"TEMPORADA",HORIZONTAL_ALIGNMENT_LEFT,-1,14,MUTED)
-	draw_string(font,Vector2(865,432),"2025–2026",HORIZONTAL_ALIGNMENT_LEFT,-1,27,WHITE)
-	draw_string(font,Vector2(865,475),"CATEGORÍAS",HORIZONTAL_ALIGNMENT_LEFT,-1,14,MUTED)
-	draw_string(font,Vector2(865,502),"C  •  B  •  A  •  AA",HORIZONTAL_ALIGNMENT_LEFT,-1,22,GOLD)
-	draw_button(Rect2(885,620,300,55),"VOLVER","back")
+		var y=188+i*48
+		var selected=i==selected_tournament
+		draw_rect(Rect2(70,y,600,38),Color("#24485b") if selected else Color("#132f3e"),true)
+		draw_rect(Rect2(70,y,6,38),GOLD if selected else Color("#294858"),true)
+		draw_string(font,Vector2(88,y+25),tournament_names[i],HORIZONTAL_ALIGNMENT_LEFT,330,15,WHITE)
+		draw_string(font,Vector2(425,y+25),tournament_dates[i],HORIZONTAL_ALIGNMENT_LEFT,110,13,GOLD if selected else MUTED)
+		draw_string(font,Vector2(550,y+25),tournament_categories[i],HORIZONTAL_ALIGNMENT_LEFT,100,13,MUTED)
+	draw_rect(Rect2(725,170,510,420),Color("#0d1e2a"),true)
+	draw_rect(Rect2(725,170,510,420),Color("#345365"),false,3)
+	draw_string(font,Vector2(755,212),"TU CAMPAÑA",HORIZONTAL_ALIGNMENT_LEFT,-1,26,WHITE)
+	draw_string(font,Vector2(755,246),"CLUB",HORIZONTAL_ALIGNMENT_LEFT,-1,13,MUTED)
+	draw_string(font,Vector2(755,273),club_names[selected_club],HORIZONTAL_ALIGNMENT_LEFT,440,20,GOLD)
+	draw_string(font,Vector2(755,310),"ASOCIACIÓN",HORIZONTAL_ALIGNMENT_LEFT,-1,13,MUTED)
+	draw_string(font,Vector2(755,337),club_states[selected_club],HORIZONTAL_ALIGNMENT_LEFT,-1,21,WHITE)
+	draw_string(font,Vector2(755,375),"CATEGORÍA",HORIZONTAL_ALIGNMENT_LEFT,-1,13,MUTED)
+	draw_string(font,Vector2(755,402),category_names[selected_category],HORIZONTAL_ALIGNMENT_LEFT,-1,23,GOLD)
+	draw_string(font,Vector2(755,440),"MANGA",HORIZONTAL_ALIGNMENT_LEFT,-1,13,MUTED)
+	draw_string(font,Vector2(755,467),venue_names[selected_venue],HORIZONTAL_ALIGNMENT_LEFT,-1,20,WHITE)
+	draw_string(font,Vector2(755,505),"PUNTOS DE CAMPEONATO  %.1f"%championship_points,HORIZONTAL_ALIGNMENT_LEFT,-1,17,GREEN)
+	draw_button(Rect2(75,620,270,55),"‹  TORNEO","prev_tournament")
+	draw_button(Rect2(355,620,270,55),"TORNEO  ›","next_tournament")
+	draw_button(Rect2(655,620,270,55),"CAMBIAR MANGA","next_venue")
+	draw_button(Rect2(955,620,270,55),"COMPETIR","start_championship",RED)
 
 func draw_shop():
 	title("TIENDA",80)
