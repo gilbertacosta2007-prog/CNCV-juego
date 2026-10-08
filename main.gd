@@ -106,11 +106,58 @@ var category_names := ["C","B","A","AA","Master","Supermaster"]
 var tournament_dates := ["05–07 DIC 2025","23–25 ENE 2026","20–22 FEB 2026","27–29 MAR 2026","24–26 ABR 2026","29–31 MAY 2026","18–20 SEP 2026","18–20 SEP 2026"]
 var tournament_categories := ["C","C / B / A / AA","C / B / A / AA","B","A","AA","Master","Supermaster"]
 var font: Font
+var horse_sprite: Sprite2D
+var bull_sprite: Sprite2D
 
 func _ready():
 	font = ThemeDB.fallback_font
 	load_state()
+	_setup_game_sprites()
 	queue_redraw()
+
+func _setup_game_sprites():
+	horse_sprite = Sprite2D.new()
+	horse_sprite.texture = load("res://assets/sprites/horse_rider.svg")
+	horse_sprite.centered = true
+	horse_sprite.scale = Vector2(0.54,0.54)
+	horse_sprite.z_index = 20
+	horse_sprite.visible = false
+	add_child(horse_sprite)
+	bull_sprite = Sprite2D.new()
+	bull_sprite.texture = load("res://assets/sprites/bull.svg")
+	bull_sprite.centered = true
+	bull_sprite.scale = Vector2(0.62,0.62)
+	bull_sprite.z_index = 19
+	bull_sprite.visible = false
+	add_child(bull_sprite)
+
+func _update_game_sprites():
+	if horse_sprite == null or bull_sprite == null:
+		return
+	var active := screen == "game"
+	horse_sprite.visible = active
+	bull_sprite.visible = active
+	if not active:
+		return
+	var gait := sin(elapsed*13.0)
+	var bob := sin(elapsed*13.0)*3.5
+	horse_sprite.position = player + Vector2(0,bob)
+	horse_sprite.rotation = clamp(-player_vel.y/1800.0,-0.10,0.10)
+	horse_sprite.scale = Vector2(0.54 + abs(gait)*0.012,0.54 - abs(gait)*0.008)
+	horse_sprite.modulate = horse_colors[selected_horse].lerp(Color.WHITE,0.42)
+	if animation_state == "miss":
+		horse_sprite.position += Vector2(-sin(elapsed*20.0)*8.0,abs(sin(elapsed*20.0))*3.0)
+	if grabbed:
+		horse_sprite.scale *= 1.04 + sin(elapsed*18.0)*0.025
+	bull_sprite.position = bull + bull_fall_offset
+	bull_sprite.rotation = bull_fall_angle
+	bull_sprite.modulate = bull_colors[selected_bull].lerp(Color.WHITE,0.35)
+	if animation_state == "fall":
+		bull_sprite.rotation = bull_fall_angle
+		bull_sprite.position = bull + bull_fall_offset
+	elif animation_state == "miss":
+		bull_sprite.position += Vector2(sin(elapsed*16.0)*4.0,0)
+
 
 func save_state():
 	var data = {
@@ -187,6 +234,7 @@ func load_state():
 func _process(delta):
 	if screen == "game":
 		update_game(delta)
+	_update_game_sprites()
 	if animation_timer > 0.0:
 		animation_timer=max(0.0,animation_timer-delta)
 		if (animation_state=="fall" or animation_state=="miss") and animation_timer <= 0.0:
@@ -727,13 +775,8 @@ func draw_game():
 		rider_pos += Vector2(0,abs(sin(gait_phase))*3.0)
 	if animation_state=="miss":
 		rider_pos += Vector2(-sin(elapsed*18.0)*8.0,abs(sin(elapsed*18.0))*3.0)
-	draw_character(rider_pos,horse_colors[selected_horse],skin,hair,beard)
-	if animation_state=="fall":
-		draw_set_transform(bull+bull_fall_offset,bull_fall_angle,Vector2.ONE)
-		draw_bull(Vector2.ZERO,bull_colors[selected_bull])
-		draw_set_transform(Vector2.ZERO,0.0,Vector2.ONE)
-	else:
-		draw_bull(bull,bull_colors[selected_bull])
+	# Personajes de la manga: sprites detallados, no geometría vectorial.
+	# Las instancias Sprite2D se actualizan en _update_game_sprites().
 	if qte_active:
 		draw_circle(qte_pos,qte_radius+10,Color(1,0.76,0.16,0.08))
 		draw_arc(qte_pos,qte_radius,0,TAU,72,GOLD,8)
