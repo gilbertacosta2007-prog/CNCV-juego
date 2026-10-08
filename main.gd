@@ -249,32 +249,107 @@ func draw_manga_preview(pos:Vector2,size:Vector2):
 	draw_string(font,pos+Vector2(105,255),"MANGA DE COLEO",HORIZONTAL_ALIGNMENT_LEFT,-1,20,WHITE)
 
 func draw_game():
-	draw_rect(Rect2(0,0,W,H),Color("#8fc3cf"),true)
-	draw_rect(Rect2(0,155,W,H-155),DIRT,true)
-	draw_rect(Rect2(0,155,W,20),Color("#e7d8a0"),true)
-	for i in 0..13:
-		var x=40+i*95
-		draw_line(Vector2(x,80),Vector2(x,175),Color("#d9d0b1"),4)
-		draw_circle(Vector2(x,75),12,Color("#c22f3b") if i%3==0 else Color("#f1f1e8"))
-	draw_string(font,Vector2(28,45),"CNBC • TURNO DE COLEO",HORIZONTAL_ALIGNMENT_LEFT,-1,28,WHITE)
-	draw_string(font,Vector2(1020,45),"PUNTOS %.2f"%score,HORIZONTAL_ALIGNMENT_LEFT,-1,24,GOLD)
-	draw_string(font,Vector2(1020,78),"TIEMPO %02d"%int(max(0,turn_time-elapsed)),HORIZONTAL_ALIGNMENT_LEFT,-1,20,WHITE)
+	# Cielo y graderío
+	draw_rect(Rect2(0,0,W,H),Color("#7db8d0"),true)
+	draw_rect(Rect2(0,0,W,155),Color("#6da9c3"),true)
+	draw_circle(Vector2(1060,72),34,Color("#f4d98a"))
+	
+	# Gradas en profundidad
+	draw_rect(Rect2(0,88,W,70),Color("#263844"),true)
+	for row in 0..2:
+		var ry=102+row*20
+		draw_line(Vector2(20,ry),Vector2(1260,ry),Color("#455866"),7)
+		for i in 0..31:
+			var sx=25+i*40+(row%2)*10
+			var shirt=Color("#d9e1e5") if i%4 else Color("#c93d46")
+			draw_circle(Vector2(sx,ry-7),4,shirt)
+	
+	# Banderas y postes
+	for i in 0..15:
+		var fx=25+i*82
+		draw_line(Vector2(fx,55),Vector2(fx,178),Color("#6b5140"),3)
+		var fc=Color("#c93743") if i%2==0 else Color("#f0e4b5")
+		draw_colored_polygon(PackedVector2Array([
+			Vector2(fx,58),Vector2(fx+32,68),Vector2(fx,78)
+		]),fc)
+	
+	# Baranda de la manga
+	draw_rect(Rect2(0,154,W,12),Color("#e9dfb7"),true)
+	draw_line(Vector2(0,166),Vector2(W,166),Color("#71583f"),5)
+	for i in 0..25:
+		var bx=i*52
+		draw_line(Vector2(bx,145),Vector2(bx,183),Color("#d8d0b2"),4)
+	
+	# Piso de arena con zonas de rodada
+	draw_rect(Rect2(0,184,W,H-184),Color("#9a6844"),true)
+	draw_rect(Rect2(0,184,W,H-184),Color("#a9754b"),false,8)
+	for i in 0..20:
+		var gx=40+i*61
+		draw_line(Vector2(gx,205),Vector2(gx+120,680),Color(0.34,0.22,0.14,0.12),2)
+	for i in 0..10:
+		var gy=225+i*42
+		draw_line(Vector2(20,gy),Vector2(1260,gy+28),Color(0.95,0.78,0.55,0.08),3)
+	
+	# Polvo y huellas
+	for i in 0..18:
+		var dx=60+i*67
+		var dy=585-(i%4)*23
+		draw_circle(Vector2(dx,dy),3+(i%3)*2,Color(0.92,0.78,0.58,0.18))
+	
+	draw_string(font,Vector2(28,38),"CNBC  •  MANGA DE COLEO",HORIZONTAL_ALIGNMENT_LEFT,-1,27,WHITE)
+	draw_string(font,Vector2(930,38),"PUNTOS  %.2f"%score,HORIZONTAL_ALIGNMENT_LEFT,-1,24,GOLD)
+	draw_string(font,Vector2(1110,38),"%.0f s"%max(0.0,turn_time-elapsed),HORIZONTAL_ALIGNMENT_LEFT,-1,22,WHITE)
+	
+	# Placa de turno
+	draw_rect(Rect2(24,202,245,54),Color(0.03,0.08,0.12,0.78),true)
+	draw_rect(Rect2(24,202,245,54),Color("#e6c24d"),false,2)
+	draw_string(font,Vector2(42,237),"TURNO  •  COLEO VENEZOLANO",HORIZONTAL_ALIGNMENT_LEFT,-1,17,GOLD)
+	
+	# Polvo detrás de los animales para sensación de velocidad
+	draw_speed_dust(player)
+	draw_speed_dust(bull)
+	
 	draw_character(player,horse_colors[selected_horse],skin,hair,beard)
 	draw_bull(bull,bull_colors[selected_bull])
+	
 	if qte_active:
-		draw_circle(qte_pos,qte_radius,Color(0.95,0.85,0.25,0.18))
-		draw_arc(qte_pos,qte_radius,0,TAU,64,GOLD,6)
-		draw_circle(qte_pos,18,Color("#ffffff"))
-		draw_string(font,qte_pos+Vector2(-45,-qte_radius-15),"¡AGARRA LA COLA!",HORIZONTAL_ALIGNMENT_CENTER,90,18,GOLD)
+		# Indicador de oportunidad: objetivo externo + zona exacta
+		draw_circle(qte_pos,qte_radius,Color(0.98,0.83,0.22,0.12))
+		draw_arc(qte_pos,qte_radius,0,TAU,64,GOLD,7)
+		draw_arc(qte_pos,34,0,TAU,48,WHITE,4)
+		draw_circle(qte_pos,13,Color("#f6f3df"))
+		draw_string(font,qte_pos+Vector2(-78,-qte_radius-18),"¡AGARRA LA COLA!",HORIZONTAL_ALIGNMENT_CENTER,156,19,GOLD)
+		draw_string(font,qte_pos+Vector2(-70,62),"ENCUENTRA EL MOMENTO",HORIZONTAL_ALIGNMENT_CENTER,140,14,WHITE)
+	
 	if grabbed:
-		draw_string(font,Vector2(500,130),qte_result,HORIZONTAL_ALIGNMENT_CENTER,300,34,GREEN)
-	draw_circle(Vector2(145,H-130),105,Color(0.02,0.08,0.12,0.75))
-	draw_circle(Vector2(145,H-130),55,Color(0.12,0.22,0.29,0.85))
-	draw_circle(Vector2(1035,H-130),72,Color(0.02,0.08,0.12,0.75))
-	draw_circle(Vector2(1135,H-130),72,Color(0.02,0.08,0.12,0.75))
-	draw_string(font,Vector2(1030,H-120),"FRENAR",HORIZONTAL_ALIGNMENT_CENTER,80,16,WHITE)
-	draw_string(font,Vector2(1120,H-120),"AGARRAR",HORIZONTAL_ALIGNMENT_CENTER,90,16,GOLD)
-	draw_string(font,Vector2(1035,H-60),"↑ ACELERAR",HORIZONTAL_ALIGNMENT_CENTER,100,16,WHITE)
+		draw_rect(Rect2(430,108,420,55),Color(0.02,0.09,0.10,0.82),true)
+		draw_string(font,Vector2(430,146),qte_result,HORIZONTAL_ALIGNMENT_CENTER,420,31,GREEN)
+	
+	# Joystick táctil izquierdo
+	draw_circle(Vector2(145,H-128),108,Color(0.02,0.06,0.09,0.72))
+	draw_arc(Vector2(145,H-128),108,0,TAU,48,Color(0.75,0.84,0.88,0.32),3)
+	draw_circle(Vector2(145,H-128),58,Color(0.10,0.18,0.23,0.9))
+	draw_arc(Vector2(145,H-128),58,0,TAU,40,Color(0.9,0.9,0.82,0.32),3)
+	draw_string(font,Vector2(95,H-122),"MOVER",HORIZONTAL_ALIGNMENT_CENTER,100,17,WHITE)
+	
+	# Botones de acción derecha
+	draw_circle(Vector2(1035,H-130),67,Color(0.02,0.06,0.09,0.78))
+	draw_arc(Vector2(1035,H-130),67,0,TAU,40,Color("#e8d18a"),4)
+	draw_string(font,Vector2(985,H-125),"FRENAR",HORIZONTAL_ALIGNMENT_CENTER,100,16,WHITE)
+	draw_circle(Vector2(1135,H-130),72,Color(0.52,0.12,0.13,0.88))
+	draw_arc(Vector2(1135,H-130),72,0,TAU,40,Color("#f3d16b"),4)
+	draw_string(font,Vector2(1080,H-125),"AGARRAR",HORIZONTAL_ALIGNMENT_CENTER,110,17,WHITE)
+	draw_string(font,Vector2(1080,H-77),"COLA",HORIZONTAL_ALIGNMENT_CENTER,110,15,GOLD)
+	
+	# Aceleración y mini guía
+	draw_rect(Rect2(950,520,260,52),Color(0.02,0.06,0.09,0.68),true)
+	draw_string(font,Vector2(968,553),"↑ ACELERAR     •     FRENAR",HORIZONTAL_ALIGNMENT_LEFT,-1,16,WHITE)
+
+func draw_speed_dust(p:Vector2):
+	for i in 0..7:
+		var off=Vector2(-55-i*11,24+(i%3)*8)
+		var r=3+(i%3)*2
+		draw_circle(p+off,r,Color(0.95,0.82,0.62,0.12+(i%3)*0.025))
 
 func draw_character(p:Vector2, hc:Color, sc:Color, hairc:Color, beardc:Color):
 	draw_ellipse(p+Vector2(0,24),Vector2(62,25),Color("#2c2020"))
