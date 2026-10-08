@@ -24,6 +24,13 @@ var selected_tournament := 0
 var selected_venue := 0
 var championship_points := 0.0
 var championship_turns := 0
+var championship_round := 0
+var player_championship_position := 0
+var championship_status := "EN CURSO"
+var rival_names := ["Los Llaneros", "Sota Fuerte", "El Relámpago", "Cabo e Soga", "La Vaquera", "Palma Real", "Los Bolívar", "San Miguel"]
+var rival_clubs := ["Los Herederos del Llano", "Sota de Oro", "Club Tinaquillo", "Cabo e Soga", "La Vaquera", "Palma Real", "Los Bolívar", "San Miguel"]
+var rival_skill := [0.93, 0.96, 0.90, 0.97, 0.88, 0.95, 0.86, 0.91]
+var rival_points := [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 var buttons: Array[Dictionary] = []
 var player := Vector2(360, 380)
 var bull := Vector2(700, 340)
@@ -165,21 +172,27 @@ func activate_button(id: String):
 			selected_club=(selected_club-1+club_names.size())%club_names.size()
 		"next_category":
 			selected_category=(selected_category+1)%category_names.size()
+			validate_championship_selection()
 		"prev_category":
 			selected_category=(selected_category-1+category_names.size())%category_names.size()
+			validate_championship_selection()
 		"next_tournament":
 			selected_tournament=(selected_tournament+1)%tournament_names.size()
+			validate_championship_selection()
 		"prev_tournament":
 			selected_tournament=(selected_tournament-1+tournament_names.size())%tournament_names.size()
+			validate_championship_selection()
 		"next_venue":
 			selected_venue=(selected_venue+1)%venue_names.size()
 		"prev_venue":
 			selected_venue=(selected_venue-1+venue_names.size())%venue_names.size()
 		"venue":
-			# La manga se alternará al iniciar la siguiente partida.
-			pass
+			selected_venue=(selected_venue+1)%venue_names.size()
+		"reset_campaign":
+			reset_campaign()
 
 func start_game():
+	validate_championship_selection()
 	screen="game"
 	elapsed=0
 	score=0
@@ -191,6 +204,7 @@ func start_game():
 	bull=Vector2(820,360)
 	player_vel=Vector2(120,0)
 	bull_vel=Vector2(-55,0)
+	championship_status="EN CURSO"
 
 func update_game(delta):
 	elapsed += delta
@@ -224,9 +238,71 @@ func update_game(delta):
 	if qte_active and Input.is_action_just_pressed("action_grab"):
 		try_grab()
 	if elapsed >= turn_time:
-		total_score += score
-		championship_points += score * 10.0
+		finish_championship_turn()
 		screen="result"
+
+func validate_championship_selection():
+	# Los torneos nacionales por categoría solo aceptan categorías compatibles.
+	var allowed=tournament_categories[selected_tournament].split(" / ")
+	var wanted=category_names[selected_category]
+	if wanted not in allowed:
+		if allowed.size() > 0:
+			for i in category_names.size():
+				if category_names[i] == allowed[0]:
+					selected_category=i
+					break
+
+func reset_campaign():
+	championship_points=0.0
+	championship_turns=0
+	championship_round=0
+	player_championship_position=0
+	championship_status="EN CURSO"
+	for i in rival_points.size():
+		rival_points[i]=0.0
+	screen="tournaments"
+
+func finish_championship_turn():
+	total_score += score
+	championship_points += score * 10.0
+	# CPU fuerte: rivales con efectividad alta y una pequeña variación por turno.
+	for i in rival_points.size():
+		var base=max(2.0, score * rival_skill[i])
+		var pressure=randf_range(0.8, 3.8) * rival_skill[i]
+		rival_points[i] += base + pressure
+	var table=[]
+	table.append({"name":"TÚ • "+club_names[selected_club],"points":championship_points,"player":true})
+	for i in rival_names.size():
+		table.append({"name":rival_names[i]+" • "+rival_clubs[i],"points":rival_points[i],"player":false})
+	table.sort_custom(func(a,b): return a.points > b.points)
+	player_championship_position=1
+	for row in table.size():
+		if table[row].player:
+			player_championship_position=row+1
+			break
+	if championship_round < 2:
+		if player_championship_position <= 4:
+			championship_round += 1
+			championship_status="CLASIFICADO"
+		else:
+			championship_status="ELIMINADO"
+	else:
+		championship_status="CAMPEÓN" if player_championship_position == 1 else ("PODIO" if player_championship_position <= 3 else "FINALISTA")
+
+func get_round_name()->String:
+	if championship_round == 0:
+		return "CLASIFICACIÓN"
+	if championship_round == 1:
+		return "SEMIFINAL"
+	return "FINAL"
+
+func get_championship_table()->Array:
+	var table=[]
+	table.append({"name":"TÚ • "+club_names[selected_club],"points":championship_points,"player":true})
+	for i in rival_names.size():
+		table.append({"name":rival_names[i],"points":rival_points[i],"player":false})
+	table.sort_custom(func(a,b): return a.points > b.points)
+	return table
 
 func try_grab():
 	if not qte_active:
@@ -565,15 +641,31 @@ func draw_ellipse(center:Vector2,r:Vector2,c:Color):
 	draw_colored_polygon(pts,c)
 
 func draw_result():
-	title("FIN DEL TURNO",100,48)
-	draw_string(font,Vector2(0,190),"RESULTADO",HORIZONTAL_ALIGNMENT_CENTER,W,28,MUTED)
-	draw_string(font,Vector2(0,245),"PUNTUACIÓN: %.2f"%score,HORIZONTAL_ALIGNMENT_CENTER,W,52,GOLD)
-	var msg="Sigue entrenando para dominar la manga."
-	if score>=7: msg="¡Actuación de campeón!"
-	elif score>=4: msg="¡Buen turno!"
-	draw_string(font,Vector2(0,305),msg,HORIZONTAL_ALIGNMENT_CENTER,W,28,WHITE)
-	draw_button(Rect2(460,410,360,70),"VOLVER AL MENÚ","back",RED)
-	draw_button(Rect2(460,500,360,70),"OTRO TURNO","play",PANEL2)
+	title("FIN DEL TURNO",70,44)
+	draw_string(font,Vector2(50,125),"PUNTUACIÓN: %.2f"%score,HORIZONTAL_ALIGNMENT_LEFT,-1,30,GOLD)
+	draw_string(font,Vector2(50,158),get_round_name()+"  •  "+championship_status,HORIZONTAL_ALIGNMENT_LEFT,-1,21,GREEN if championship_status=="CLASIFICADO" else RED)
+	draw_rect(Rect2(45,190,590,390),Color("#0d1e2a"),true)
+	draw_rect(Rect2(45,190,590,390),Color("#345365"),false,3)
+	draw_string(font,Vector2(70,228),"CLASIFICACIÓN CPU",HORIZONTAL_ALIGNMENT_LEFT,-1,24,WHITE)
+	var table=get_championship_table()
+	for i in table.size():
+		var y=265+i*34
+		var is_player=table[i].player
+		draw_rect(Rect2(65,y-22,550,29),Color("#24485b") if is_player else Color("#132b39"),true)
+		draw_string(font,Vector2(78,y),str(i+1)+". "+table[i].name,HORIZONTAL_ALIGNMENT_LEFT,390,15,GOLD if is_player else WHITE)
+		draw_string(font,Vector2(500,y),"%.1f"%table[i].points,HORIZONTAL_ALIGNMENT_LEFT,90,15,GREEN if is_player else MUTED)
+	draw_string(font,Vector2(680,235),"TU POSICIÓN",HORIZONTAL_ALIGNMENT_LEFT,-1,16,MUTED)
+	draw_string(font,Vector2(680,275),"#%d / 9"%player_championship_position,HORIZONTAL_ALIGNMENT_LEFT,-1,52,GOLD)
+	draw_string(font,Vector2(680,330),"CPU: DIFÍCIL",HORIZONTAL_ALIGNMENT_LEFT,-1,22,RED)
+	draw_string(font,Vector2(680,365),"Los rivales tienen alta efectividad.",HORIZONTAL_ALIGNMENT_LEFT,500,17,MUTED)
+	var msg="¡Clasificaste! Prepárate para la siguiente ronda."
+	if championship_status=="ELIMINADO": msg="El CPU fue superior. Repite la ronda y mejora tu técnica."
+	elif championship_status=="CAMPEÓN": msg="¡CAMPEÓN NACIONAL! Dominaste la clasificación."
+	elif championship_status=="PODIO": msg="¡Gran final! Terminaste en el podio."
+	draw_string(font,Vector2(680,420),msg,HORIZONTAL_ALIGNMENT_LEFT,490,20,WHITE)
+	draw_button(Rect2(680,500,245,62),"CONTINUAR","play",RED)
+	draw_button(Rect2(940,500,245,62),"CAMPEONATO","tournaments",PANEL2)
+	draw_button(Rect2(680,575,505,55),"REINICIAR CAMPAÑA","reset_campaign",PANEL2)
 
 func draw_horses():
 	title("CABALLEROS DE LA MANGA",68,40)
@@ -746,6 +838,7 @@ func draw_tournaments():
 	draw_string(font,Vector2(755,440),"MANGA",HORIZONTAL_ALIGNMENT_LEFT,-1,13,MUTED)
 	draw_string(font,Vector2(755,467),venue_names[selected_venue],HORIZONTAL_ALIGNMENT_LEFT,-1,20,WHITE)
 	draw_string(font,Vector2(755,505),"PUNTOS DE CAMPEONATO  %.1f"%championship_points,HORIZONTAL_ALIGNMENT_LEFT,-1,17,GREEN)
+	draw_string(font,Vector2(755,535),"POSICIÓN ACTUAL  #%d / 9"%player_championship_position,HORIZONTAL_ALIGNMENT_LEFT,-1,16,GOLD)
 	draw_button(Rect2(75,545,150,50),"‹","prev_category")
 	draw_button(Rect2(230,545,240,50),"CATEGORÍA  "+category_names[selected_category],"next_category",PANEL2)
 	draw_button(Rect2(475,545,150,50),"›","next_category")
@@ -753,8 +846,9 @@ func draw_tournaments():
 	draw_button(Rect2(955,545,270,50),"COMPETIR","start_championship",RED)
 	draw_button(Rect2(75,620,270,55),"‹  TORNEO","prev_tournament")
 	draw_button(Rect2(355,620,270,55),"TORNEO  ›","next_tournament")
-	draw_button(Rect2(655,620,270,55),"REINICIAR CAMPAÑA","back",PANEL2)
-	draw_string(font,Vector2(955,652),"TURNOS: %d"%championship_turns,HORIZONTAL_ALIGNMENT_CENTER,270,15,MUTED)
+	draw_button(Rect2(655,620,270,55),"REINICIAR CAMPAÑA","reset_campaign",PANEL2)
+	draw_string(font,Vector2(955,620),"RONDA: "+get_round_name(),HORIZONTAL_ALIGNMENT_CENTER,270,17,GOLD)
+	draw_string(font,Vector2(955,652),"TURNOS: %d  •  CPU: DIFÍCIL"%championship_turns,HORIZONTAL_ALIGNMENT_CENTER,270,15,MUTED)
 
 func draw_shop():
 	title("TIENDA",80)
