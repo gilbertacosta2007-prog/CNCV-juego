@@ -58,6 +58,17 @@ var horse_names := ["Alazán", "Negro", "Palomino", "Tordillo", "Zaino", "Bayo"]
 var bull_colors := [Color("#302820"), Color("#5c4636"), Color("#181818"), Color("#765d47")]
 var bull_names := ["Castaño", "Colorado", "Negro", "Barcino"]
 var coins := 1500
+var skin_index := 1
+var hair_style_index := 0
+var beard_style_index := 0
+var hair_color_index := 0
+var beard_color_index := 0
+var hat_index := 0
+var shirt_index := 0
+var joystick_active := false
+var joystick_touch_id := -1
+var joystick_vector := Vector2.ZERO
+var joystick_center := Vector2(145, H-128)
 
 # Datos inspirados en registros públicos de FEVECO para dar identidad venezolana al V1.
 var association_index := 0
@@ -93,9 +104,28 @@ func _process(delta):
 		update_game(delta)
 	queue_redraw()
 
+func update_joystick(p: Vector2):
+	var delta=p-joystick_center
+	if delta.length()>88.0:
+		delta=delta.normalized()*88.0
+	joystick_vector=delta/88.0
+	player_vel=joystick_vector*215.0
+
 func _input(event):
-	if event is InputEventScreenTouch and event.pressed:
-		handle_touch(event.position)
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			if screen == "game" and event.position.x < 360 and event.position.y > H-270:
+				joystick_active=true
+				joystick_touch_id=event.index
+				update_joystick(event.position)
+			else:
+				handle_touch(event.position)
+		elif event.index == joystick_touch_id:
+			joystick_active=false
+			joystick_touch_id=-1
+			joystick_vector=Vector2.ZERO
+	elif event is InputEventScreenDrag and screen == "game" and event.index == joystick_touch_id:
+		update_joystick(event.position)
 	elif event is InputEventMouseButton and event.pressed:
 		handle_touch(event.position)
 	elif event is InputEventKey and event.pressed:
@@ -106,15 +136,12 @@ func _input(event):
 
 func handle_touch(p: Vector2):
 	if screen == "game":
-		if p.x < 300 and p.y > H-260:
-			var center=Vector2(145,H-130)
-			var dir=(p-center).normalized()
-			player_vel=dir*170.0
-		elif p.x > 1030 and p.y > H-260:
-			if p.y < H-135:
-				player_vel += Vector2(0,-85)
-			else:
-				try_grab()
+		if Rect2(1080,H-235,150,92).has_point(p):
+			player_vel.x=min(280.0,player_vel.x+95.0)
+		elif Rect2(930,H-145,135,95).has_point(p):
+			player_vel.x=max(0.0,player_vel.x-120.0)
+		elif Rect2(1080,H-145,150,95).has_point(p):
+			try_grab()
 		return
 	for b in buttons:
 		if Rect2(b.pos,b.size).has_point(p):
@@ -157,13 +184,25 @@ func activate_button(id: String):
 		"prev_bull":
 			selected_bull=(selected_bull-1+bull_names.size())%bull_names.size()
 		"skin":
-			skin=Color("#c88758") if skin==Color("#8a5a3b") else Color("#5a351f")
+			skin_index=(skin_index+1)%6
+			var skins=[Color("#3d2418"),Color("#6b4028"),Color("#8a5a3b"),Color("#ad744a"),Color("#c88758"),Color("#e0a979")]
+			skin=skins[skin_index]
 		"hair":
-			hair=Color("#b36b32") if hair==Color("#241812") else Color("#241812")
+			hair_style_index=(hair_style_index+1)%6
 		"beard":
-			beard=hair
-		"style":
-			hair_style=(hair_style+1)%3
+			beard_style_index=(beard_style_index+1)%6
+		"hair_color":
+			hair_color_index=(hair_color_index+1)%6
+			var hc=[Color("#17110e"),Color("#3b2115"),Color("#6b3c20"),Color("#9a5728"),Color("#c08a3d"),Color("#d7b16a")]
+			hair=hc[hair_color_index]
+		"beard_color":
+			beard_color_index=(beard_color_index+1)%6
+			var bc=[Color("#17110e"),Color("#3b2115"),Color("#6b3c20"),Color("#9a5728"),Color("#c08a3d"),Color("#d7b16a")]
+			beard=bc[beard_color_index]
+		"hat":
+			hat_index=(hat_index+1)%5
+		"shirt":
+			shirt_index=(shirt_index+1)%6
 		"association":
 			association_index=(association_index+1)%association_names.size()
 		"next_club":
