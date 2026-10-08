@@ -108,6 +108,10 @@ var tournament_categories := ["C","C / B / A / AA","C / B / A / AA","B","A","AA"
 var font: Font
 var horse_sprite: Sprite2D
 var bull_sprite: Sprite2D
+var horse_texture: Texture2D
+var bull_texture: Texture2D
+var arena_bg_texture: Texture2D
+var menu_bg_texture: Texture2D
 
 func _ready():
 	font = ThemeDB.fallback_font
@@ -116,17 +120,22 @@ func _ready():
 	queue_redraw()
 
 func _setup_game_sprites():
+	# Cachear las ilustraciones una sola vez evita cargas repetidas durante el juego.
+	horse_texture = load("res://assets/sprites/horse_rider.svg")
+	bull_texture = load("res://assets/sprites/bull.svg")
+	arena_bg_texture = load("res://assets/sprites/arena_background.svg")
+	menu_bg_texture = load("res://assets/sprites/menu_background.svg")
 	horse_sprite = Sprite2D.new()
-	horse_sprite.texture = load("res://assets/sprites/horse_rider.svg")
+	horse_sprite.texture = horse_texture
 	horse_sprite.centered = true
-	horse_sprite.scale = Vector2(0.54,0.54)
+	horse_sprite.scale = Vector2(0.48,0.48)
 	horse_sprite.z_index = 20
 	horse_sprite.visible = false
 	add_child(horse_sprite)
 	bull_sprite = Sprite2D.new()
-	bull_sprite.texture = load("res://assets/sprites/bull.svg")
+	bull_sprite.texture = bull_texture
 	bull_sprite.centered = true
-	bull_sprite.scale = Vector2(0.62,0.62)
+	bull_sprite.scale = Vector2(0.50,0.50)
 	bull_sprite.z_index = 19
 	bull_sprite.visible = false
 	add_child(bull_sprite)
@@ -143,7 +152,7 @@ func _update_game_sprites():
 	var bob := sin(elapsed*13.0)*3.5
 	horse_sprite.position = player + Vector2(0,bob)
 	horse_sprite.rotation = clamp(-player_vel.y/1800.0,-0.10,0.10)
-	horse_sprite.scale = Vector2(0.54 + abs(gait)*0.012,0.54 - abs(gait)*0.008)
+	horse_sprite.scale = Vector2(0.48 + abs(gait)*0.012,0.48 - abs(gait)*0.008)
 	horse_sprite.modulate = horse_colors[selected_horse].lerp(Color.WHITE,0.42)
 	if animation_state == "miss":
 		horse_sprite.position += Vector2(-sin(elapsed*20.0)*8.0,abs(sin(elapsed*20.0))*3.0)
@@ -596,9 +605,13 @@ func resolve_grab(result:String, points:float, success:bool):
 
 func draw_button(rect:Rect2, label:String, id:String, accent:=Color("#17344b")):
 	buttons.append({"id":id,"pos":rect.position,"size":rect.size})
+	# Botón con sombra, borde luminoso y una pestaña de color para dar profundidad.
+	draw_rect(Rect2(rect.position+Vector2(0,5),rect.size),Color(0.0,0.0,0.0,0.34),true)
 	draw_rect(rect,accent,true)
-	draw_rect(rect,Color("#2e526d"),false,3)
-	draw_string(font,rect.position+Vector2(20,rect.size.y*0.63),label,HORIZONTAL_ALIGNMENT_CENTER,rect.size.x-40,24,WHITE)
+	draw_rect(Rect2(rect.position+Vector2(2,2),Vector2(max(0.0,rect.size.x-4),4)),Color(1,1,1,0.13),true)
+	draw_rect(Rect2(rect.position,Vector2(6,rect.size.y)),GOLD if id=="play" or id=="start_championship" else Color("#2f6075"),true)
+	draw_rect(rect,Color("#668a9b"),false,2)
+	draw_string(font,rect.position+Vector2(18,rect.size.y*0.63),label,HORIZONTAL_ALIGNMENT_CENTER,rect.size.x-36,24,WHITE)
 
 func _draw():
 	buttons.clear()
@@ -621,10 +634,14 @@ func title(text:String, y:=70.0, size:=44):
 	draw_string(font,Vector2(0,y),text,HORIZONTAL_ALIGNMENT_CENTER,W,size,WHITE)
 
 func draw_menu():
-	# Fondo principal tipo portada deportiva
-	draw_rect(Rect2(0,0,W,H),Color("#06101a"),true)
-	draw_rect(Rect2(0,0,W,235),Color("#102c3b"),true)
-	draw_rect(Rect2(0,235,W,H-235),Color("#091824"),true)
+	# Portada cinematográfica con una manga ilustrada en pantalla completa.
+	if menu_bg_texture != null:
+		draw_texture_rect(menu_bg_texture,Rect2(0,0,W,H),false)
+	else:
+		draw_rect(Rect2(0,0,W,H),Color("#06101a"),true)
+	# Oscurecer el lateral izquierdo para que el menú y los textos siempre destaquen.
+	draw_rect(Rect2(0,0,590,H),Color(0.015,0.045,0.075,0.82),true)
+	draw_rect(Rect2(590,0,690,H),Color(0.015,0.045,0.075,0.20),true)
 	
 	# Luces de estadio
 	draw_circle(Vector2(1110,90),170,Color(0.25,0.75,0.9,0.07))
@@ -659,10 +676,15 @@ func draw_menu():
 	for i in range(17):
 		draw_circle(Vector2(625+i*34,178+(i%3)*5),4,Color("#d7dde0"))
 	
-	# Acción principal de la portada
-	draw_speed_dust(Vector2(870,310))
-	draw_character(Vector2(850,300),horse_colors[selected_horse],skin,hair,beard)
-	draw_bull(Vector2(1025,294),bull_colors[selected_bull])
+	# Ilustraciones de caballo/coleador y toro de alta resolución.
+	if horse_texture != null:
+		draw_texture_rect(horse_texture,Rect2(690,175,300,205),false)
+	else:
+		draw_character(Vector2(850,300),horse_colors[selected_horse],skin,hair,beard)
+	if bull_texture != null:
+		draw_texture_rect(bull_texture,Rect2(925,190,270,190),false)
+	else:
+		draw_bull(Vector2(1025,294),bull_colors[selected_bull])
 	draw_line(Vector2(930,287),Vector2(988,290),Color("#e8c27a"),4)
 	
 	# QTE decorativo
@@ -710,16 +732,15 @@ func draw_manga_preview(pos:Vector2,size:Vector2):
 	draw_string(font,pos+Vector2(105,255),"MANGA DE COLEO",HORIZONTAL_ALIGNMENT_LEFT,-1,20,WHITE)
 
 func draw_game():
-	# Persistent navigation: the player is never trapped inside the manga.
-	draw_button(Rect2(40,35,175,58),"‹  MENÚ","game_menu",Color("#16374b"))
-	draw_button(Rect2(225,35,175,58),"SALIR","game_exit",Color("#4a2730"))
-
-	# Fondo ilustrado de alta calidad: graderías, banderas, reflectores y textura de arena.
-	var arena_bg = load("res://assets/sprites/arena_background.svg")
-	if arena_bg:
-		draw_texture_rect(arena_bg, Rect2(0,0,W,H), false)
+	# La manga se pinta PRIMERO. Antes el fondo se dibujaba encima de los botones,
+	# ocultando la navegación y haciendo que la arena pareciera no responder.
+	if arena_bg_texture != null:
+		draw_texture_rect(arena_bg_texture,Rect2(0,0,W,H),false)
 	else:
-		draw_rect(Rect2(0,0,W,H), Color("#95613f"), true)
+		draw_rect(Rect2(0,0,W,H),Color("#95613f"),true)
+		draw_rect(Rect2(0,0,W,250),Color("#527f91"),true)
+		draw_rect(Rect2(0,250,W,70),Color("#354b46"),true)
+	# La manga siempre conserva su profundidad y el HUD queda por encima del fondo.
 	# HUD premium.
 	draw_rect(Rect2(20,14,455,52),Color(0.02,0.06,0.09,0.76),true)
 	draw_rect(Rect2(20,14,455,52),Color("#e7c756"),false,2)
@@ -772,6 +793,9 @@ func draw_game():
 	draw_string(font,Vector2(1055,H-171),"COLA",HORIZONTAL_ALIGNMENT_CENTER,140,15,GOLD)
 	draw_rect(Rect2(920,H-95,300,48),Color(0.02,0.06,0.09,0.88),true)
 	draw_string(font,Vector2(940,H-64),"ACELERAR  ▶",HORIZONTAL_ALIGNMENT_LEFT,-1,18,WHITE)
+	# Dibujar la navegación al final garantiza que nunca quede tapada por el fondo.
+	draw_button(Rect2(40,35,175,58),"‹  MENÚ","game_menu",Color("#16374b"))
+	draw_button(Rect2(225,35,175,58),"SALIR","game_exit",Color("#4a2730"))
 
 
 func draw_speed_dust(p:Vector2):
@@ -923,9 +947,11 @@ func draw_horses():
 	draw_rect(Rect2(70,195,670,250),Color("#6e8e95"),true)
 	draw_rect(Rect2(70,330,670,115),Color("#9a6844"),true)
 	
-	# caballo grande
-	draw_speed_dust(Vector2(405,365))
-	draw_character(Vector2(400,355),horse_colors[selected_horse],skin,hair,beard)
+	# Caballo/coleador mostrado con el sprite detallado de alta resolución.
+	if horse_texture != null:
+		draw_texture_rect(horse_texture,Rect2(215,205,390,256),false)
+	else:
+		draw_character(Vector2(400,355),horse_colors[selected_horse],skin,hair,beard)
 	
 	# Navegación
 	draw_button(Rect2(95,485,105,55),"‹","prev_horse")
@@ -965,7 +991,10 @@ func draw_bulls():
 	draw_rect(Rect2(45,170,720,410),Color("#3e6070"),false,3)
 	draw_rect(Rect2(70,195,670,250),Color("#718b91"),true)
 	draw_rect(Rect2(70,330,670,115),Color("#9a6844"),true)
-	draw_bull(Vector2(400,355),bull_colors[selected_bull])
+	if bull_texture != null:
+		draw_texture_rect(bull_texture,Rect2(205,200,400,252),false)
+	else:
+		draw_bull(Vector2(400,355),bull_colors[selected_bull])
 	
 	draw_button(Rect2(95,485,105,55),"‹","prev_bull")
 	draw_button(Rect2(210,485,250,55),"SELECCIONAR","next_bull",RED)
