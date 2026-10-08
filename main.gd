@@ -485,101 +485,84 @@ func draw_manga_preview(pos:Vector2,size:Vector2):
 	draw_string(font,pos+Vector2(105,255),"MANGA DE COLEO",HORIZONTAL_ALIGNMENT_LEFT,-1,20,WHITE)
 
 func draw_game():
-	# Cielo y graderío
-	draw_rect(Rect2(0,0,W,H),Color("#7db8d0"),true)
-	draw_rect(Rect2(0,0,W,155),Color("#6da9c3"),true)
-	draw_circle(Vector2(1060,72),34,Color("#f4d98a"))
-	
-	# Gradas en profundidad
-	draw_rect(Rect2(0,88,W,70),Color("#263844"),true)
-	for row in range(3):
-		var ry=102+row*20
-		draw_line(Vector2(20,ry),Vector2(1260,ry),Color("#455866"),7)
-		for i in range(32):
-			var sx=25+i*40+(row%2)*10
-			var shirt=Color("#d9e1e5") if i%4 else Color("#c93d46")
-			draw_circle(Vector2(sx,ry-7),4,shirt)
-	
-	# Banderas y postes
-	for i in range(16):
-		var fx=25+i*82
-		draw_line(Vector2(fx,55),Vector2(fx,178),Color("#6b5140"),3)
-		var fc=Color("#c93743") if i%2==0 else Color("#f0e4b5")
-		draw_colored_polygon(PackedVector2Array([
-			Vector2(fx,58),Vector2(fx+32,68),Vector2(fx,78)
-		]),fc)
-	
-	# Baranda de la manga
-	draw_rect(Rect2(0,154,W,12),Color("#e9dfb7"),true)
-	draw_line(Vector2(0,166),Vector2(W,166),Color("#71583f"),5)
-	for i in range(26):
-		var bx=i*52
-		draw_line(Vector2(bx,145),Vector2(bx,183),Color("#d8d0b2"),4)
-	
-	# Piso de arena con zonas de rodada
-	draw_rect(Rect2(0,184,W,H-184),Color("#9a6844"),true)
-	draw_rect(Rect2(0,184,W,H-184),Color("#a9754b"),false,8)
-	for i in range(21):
-		var gx=40+i*61
-		draw_line(Vector2(gx,205),Vector2(gx+120,680),Color(0.34,0.22,0.14,0.12),2)
-	for i in range(11):
-		var gy=225+i*42
-		draw_line(Vector2(20,gy),Vector2(1260,gy+28),Color(0.95,0.78,0.55,0.08),3)
-	
-	# Polvo y huellas
-	for i in range(19):
-		var dx=60+i*67
-		var dy=585-(i%4)*23
-		draw_circle(Vector2(dx,dy),3+(i%3)*2,Color(0.92,0.78,0.58,0.18))
-	
-	draw_string(font,Vector2(28,38),"CNBC  •  MANGA DE COLEO",HORIZONTAL_ALIGNMENT_LEFT,-1,27,WHITE)
-	draw_string(font,Vector2(930,38),"PUNTOS  %.2f"%score,HORIZONTAL_ALIGNMENT_LEFT,-1,24,GOLD)
-	draw_string(font,Vector2(1110,38),"%.0f s"%max(0.0,turn_time-elapsed),HORIZONTAL_ALIGNMENT_LEFT,-1,22,WHITE)
-	
-	# Placa de turno
-	draw_rect(Rect2(24,202,245,54),Color(0.03,0.08,0.12,0.78),true)
-	draw_rect(Rect2(24,202,245,54),Color("#e6c24d"),false,2)
-	draw_string(font,Vector2(42,237),"TURNO  •  COLEO VENEZOLANO",HORIZONTAL_ALIGNMENT_LEFT,-1,17,GOLD)
-	
-	# Polvo detrás de los animales para sensación de velocidad
+	draw_rect(Rect2(0,0,W,H),Color("#6aaec9"),true)
+	draw_rect(Rect2(0,0,W,180),Color("#7fc3da"),true)
+	draw_circle(Vector2(1110,70),46,Color("#f6d983"))
+	draw_circle(Vector2(1110,70),67,Color(1,0.86,0.48,0.08))
+	# Gradas profundas.
+	draw_rect(Rect2(0,82,W,92),Color("#172832"),true)
+	for row in range(4):
+		var y=108+row*18
+		draw_rect(Rect2(0,y,W,5),Color("#405865"),true)
+		for i in range(42):
+			var x=14+i*31+(row%2)*9
+			var shirt=[Color("#e8e8df"),Color("#d4484b"),Color("#e6cf7e"),Color("#72aec5")][i%4]
+			draw_circle(Vector2(x,y-5),4,shirt)
+			draw_circle(Vector2(x,y-9),3,Color("#c29a76"))
+	draw_line(Vector2(0,80),Vector2(W,80),Color("#ead9a7"),4)
+	for i in range(17):
+		var x=18+i*78
+		draw_line(Vector2(x,45),Vector2(x,182),Color("#604a38"),4)
+		var fc=Color("#d63d45") if i%2==0 else Color("#f2e1aa")
+		draw_colored_polygon(PackedVector2Array([Vector2(x,48),Vector2(x+38,61),Vector2(x,74)]),PackedColorArray([fc]))
+	# Baranda.
+	draw_rect(Rect2(0,157,W,9),Color("#e9d9ac"),true)
+	draw_rect(Rect2(0,169,W,8),Color("#654b38"),true)
+	for i in range(29): draw_line(Vector2(i*46,145),Vector2(i*46,188),Color("#d7ceb2"),5)
+	# Arena con perspectiva y textura.
+	draw_rect(Rect2(0,184,W,H-184),Color("#95613f"),true)
+	draw_rect(Rect2(0,184,W,H-184),Color("#b4774c"),false,7)
+	for i in range(8):
+		draw_line(Vector2(0,210+i*62),Vector2(W,244+i*62),Color(1,0.83,0.58,0.055),5)
+	for i in range(22):
+		var x=-30+i*64
+		draw_line(Vector2(x,205),Vector2(x+145,680),Color(0.22,0.12,0.07,0.13),2)
+	for i in range(52):
+		draw_circle(Vector2(35+(i*97)%1200,205+(i*53)%440),1+(i%4),Color(0.45,0.26,0.15,0.13))
+	# Marcas circulares de la manga.
+	for i in range(8):
+		draw_arc(Vector2(110+i*165,475),90,0.1,2.95,32,Color(0.32,0.17,0.10,0.13),3)
+	# HUD premium.
+	draw_rect(Rect2(20,14,455,52),Color(0.02,0.06,0.09,0.76),true)
+	draw_rect(Rect2(20,14,455,52),Color("#e7c756"),false,2)
+	draw_string(font,Vector2(38,47),"CNBC  •  MANGA DE COLEO",HORIZONTAL_ALIGNMENT_LEFT,-1,21,WHITE)
+	draw_rect(Rect2(900,14,330,52),Color(0.02,0.06,0.09,0.76),true)
+	draw_string(font,Vector2(925,47),"PUNTOS  %.0f"%score,HORIZONTAL_ALIGNMENT_LEFT,-1,22,GOLD)
+	draw_string(font,Vector2(1100,47),"%.0f s"%max(0.0,turn_time-elapsed),HORIZONTAL_ALIGNMENT_LEFT,-1,21,WHITE)
+	draw_rect(Rect2(25,202,290,58),Color(0.02,0.06,0.09,0.82),true)
+	draw_rect(Rect2(25,202,290,58),Color("#d8b94f"),false,2)
+	draw_string(font,Vector2(45,238),"TURNO  •  COLEO VENEZOLANO",HORIZONTAL_ALIGNMENT_LEFT,-1,18,GOLD)
 	draw_speed_dust(player)
 	draw_speed_dust(bull)
-	
 	draw_character(player,horse_colors[selected_horse],skin,hair,beard)
 	draw_bull(bull,bull_colors[selected_bull])
-	
 	if qte_active:
-		# Indicador de oportunidad: objetivo externo + zona exacta
-		draw_circle(qte_pos,qte_radius,Color(0.98,0.83,0.22,0.12))
-		draw_arc(qte_pos,qte_radius,0,TAU,64,GOLD,7)
-		draw_arc(qte_pos,34,0,TAU,48,WHITE,4)
-		draw_circle(qte_pos,13,Color("#f6f3df"))
-		draw_string(font,qte_pos+Vector2(-78,-qte_radius-18),"¡AGARRA LA COLA!",HORIZONTAL_ALIGNMENT_CENTER,156,19,GOLD)
-		draw_string(font,qte_pos+Vector2(-70,62),"ENCUENTRA EL MOMENTO",HORIZONTAL_ALIGNMENT_CENTER,140,14,WHITE)
-	
+		draw_circle(qte_pos,qte_radius+10,Color(1,0.76,0.16,0.08))
+		draw_arc(qte_pos,qte_radius,0,TAU,72,GOLD,8)
+		draw_arc(qte_pos,34,0,TAU,64,WHITE,4)
+		draw_circle(qte_pos,13,Color("#fff4c7"))
+		draw_string(font,qte_pos+Vector2(-105,-qte_radius-18),"¡AGARRA LA COLA!",HORIZONTAL_ALIGNMENT_CENTER,210,20,GOLD)
 	if grabbed:
-		draw_rect(Rect2(430,108,420,55),Color(0.02,0.09,0.10,0.82),true)
-		draw_string(font,Vector2(430,146),qte_result,HORIZONTAL_ALIGNMENT_CENTER,420,31,GREEN)
-	
-	# Controles móviles separados, grandes y sin solaparse.
-	draw_circle(joystick_center,112,Color(0.01,0.04,0.07,0.84))
-	draw_arc(joystick_center,112,0,TAU,64,Color("#8aa8b8"),4)
+		draw_rect(Rect2(390,96,500,66),Color(0.02,0.09,0.10,0.86),true)
+		draw_rect(Rect2(390,96,500,66),Color("#e6c24d"),false,2)
+		draw_string(font,Vector2(390,139),qte_result,HORIZONTAL_ALIGNMENT_CENTER,500,32,GREEN)
+	# Controles limpios.
+	draw_circle(joystick_center,112,Color(0.01,0.03,0.05,0.88))
+	draw_arc(joystick_center,112,0,TAU,64,Color("#b5c7cd"),4)
 	var knob=joystick_center+joystick_vector*72.0
-	draw_circle(knob,55,Color("#193a4c"))
-	draw_arc(knob,55,0,TAU,48,Color("#d8c98d"),3)
+	draw_circle(knob,55,Color("#183b4d"))
+	draw_arc(knob,55,0,TAU,48,Color("#e5cb72"),3)
 	draw_string(font,knob+Vector2(-48,7),"MOVER",HORIZONTAL_ALIGNMENT_CENTER,96,16,WHITE)
-
-	draw_circle(Vector2(995,H-190),58,Color("#172d39"))
-	draw_arc(Vector2(995,H-190),58,0,TAU,48,GOLD,3)
+	draw_circle(Vector2(995,H-190),58,Color("#162b36"))
+	draw_arc(Vector2(995,H-190),58,0,TAU,48,GOLD,4)
 	draw_string(font,Vector2(940,H-197),"FRENAR",HORIZONTAL_ALIGNMENT_CENTER,110,15,WHITE)
-
-	draw_circle(Vector2(1125,H-190),68,Color("#b52e38"))
-	draw_arc(Vector2(1125,H-190),68,0,TAU,48,Color("#ffe083"),4)
+	draw_circle(Vector2(1125,H-190),68,Color("#a92d35"))
+	draw_arc(Vector2(1125,H-190),68,0,TAU,48,Color("#f5d66d"),5)
 	draw_string(font,Vector2(1062,H-197),"AGARRAR",HORIZONTAL_ALIGNMENT_CENTER,126,16,WHITE)
 	draw_string(font,Vector2(1062,H-170),"COLA",HORIZONTAL_ALIGNMENT_CENTER,126,14,GOLD)
-
-	draw_rect(Rect2(920,H-95,300,48),Color(0.02,0.06,0.09,0.86),true)
+	draw_rect(Rect2(920,H-95,300,48),Color(0.02,0.06,0.09,0.88),true)
 	draw_string(font,Vector2(940,H-64),"ACELERAR  ▶",HORIZONTAL_ALIGNMENT_LEFT,-1,18,WHITE)
+
 
 func draw_speed_dust(p:Vector2):
 	for i in range(20):
