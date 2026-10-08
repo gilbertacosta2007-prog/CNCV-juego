@@ -561,25 +561,25 @@ func draw_game():
 		draw_rect(Rect2(430,108,420,55),Color(0.02,0.09,0.10,0.82),true)
 		draw_string(font,Vector2(430,146),qte_result,HORIZONTAL_ALIGNMENT_CENTER,420,31,GREEN)
 	
-	# Joystick táctil izquierdo
-	draw_circle(Vector2(145,H-128),108,Color(0.02,0.06,0.09,0.72))
-	draw_arc(Vector2(145,H-128),108,0,TAU,48,Color(0.75,0.84,0.88,0.32),3)
-	draw_circle(Vector2(145,H-128),58,Color(0.10,0.18,0.23,0.9))
-	draw_arc(Vector2(145,H-128),58,0,TAU,40,Color(0.9,0.9,0.82,0.32),3)
-	draw_string(font,Vector2(95,H-122),"MOVER",HORIZONTAL_ALIGNMENT_CENTER,100,17,WHITE)
-	
-	# Botones de acción derecha
-	draw_circle(Vector2(1035,H-130),67,Color(0.02,0.06,0.09,0.78))
-	draw_arc(Vector2(1035,H-130),67,0,TAU,40,Color("#e8d18a"),4)
-	draw_string(font,Vector2(985,H-125),"FRENAR",HORIZONTAL_ALIGNMENT_CENTER,100,16,WHITE)
-	draw_circle(Vector2(1135,H-130),72,Color(0.52,0.12,0.13,0.88))
-	draw_arc(Vector2(1135,H-130),72,0,TAU,40,Color("#f3d16b"),4)
-	draw_string(font,Vector2(1080,H-125),"AGARRAR",HORIZONTAL_ALIGNMENT_CENTER,110,17,WHITE)
-	draw_string(font,Vector2(1080,H-77),"COLA",HORIZONTAL_ALIGNMENT_CENTER,110,15,GOLD)
-	
-	# Aceleración y mini guía
-	draw_rect(Rect2(950,520,260,52),Color(0.02,0.06,0.09,0.68),true)
-	draw_string(font,Vector2(968,553),"↑ ACELERAR     •     FRENAR",HORIZONTAL_ALIGNMENT_LEFT,-1,16,WHITE)
+	# Controles móviles separados, grandes y sin solaparse.
+	draw_circle(joystick_center,112,Color(0.01,0.04,0.07,0.84))
+	draw_arc(joystick_center,112,0,TAU,64,Color("#8aa8b8"),4)
+	var knob=joystick_center+joystick_vector*72.0
+	draw_circle(knob,55,Color("#193a4c"))
+	draw_arc(knob,55,0,TAU,48,Color("#d8c98d"),3)
+	draw_string(font,knob+Vector2(-48,7),"MOVER",HORIZONTAL_ALIGNMENT_CENTER,96,16,WHITE)
+
+	draw_circle(Vector2(995,H-190),58,Color("#172d39"))
+	draw_arc(Vector2(995,H-190),58,0,TAU,48,GOLD,3)
+	draw_string(font,Vector2(940,H-197),"FRENAR",HORIZONTAL_ALIGNMENT_CENTER,110,15,WHITE)
+
+	draw_circle(Vector2(1125,H-190),68,Color("#b52e38"))
+	draw_arc(Vector2(1125,H-190),68,0,TAU,48,Color("#ffe083"),4)
+	draw_string(font,Vector2(1062,H-197),"AGARRAR",HORIZONTAL_ALIGNMENT_CENTER,126,16,WHITE)
+	draw_string(font,Vector2(1062,H-170),"COLA",HORIZONTAL_ALIGNMENT_CENTER,126,14,GOLD)
+
+	draw_rect(Rect2(920,H-95,300,48),Color(0.02,0.06,0.09,0.86),true)
+	draw_string(font,Vector2(940,H-64),"ACELERAR  ▶",HORIZONTAL_ALIGNMENT_LEFT,-1,18,WHITE)
 
 func draw_speed_dust(p:Vector2):
 	for i in range(8):
@@ -787,27 +787,35 @@ func draw_bulls():
 	draw_button(Rect2(850,620,300,55),"VOLVER","back")
 
 func draw_custom():
-	title("COLEADOR",68,40)
-	draw_string(font,Vector2(55,112),"CREA TU COLEADOR",HORIZONTAL_ALIGNMENT_LEFT,-1,25,GOLD)
-	draw_string(font,Vector2(55,140),"Tu atleta entra a la manga con su propio estilo.",HORIZONTAL_ALIGNMENT_LEFT,-1,17,MUTED)
-	
-	draw_rect(Rect2(45,170,610,410),Color("#102a39"),true)
-	draw_rect(Rect2(45,170,610,410),Color("#3e6070"),false,3)
-	draw_rect(Rect2(70,195,560,285),Color("#203c48"),true)
-	draw_circle(Vector2(350,285),92,Color(0.32,0.64,0.72,0.16))
-	draw_character(Vector2(350,375),horse_colors[selected_horse],skin,hair,beard)
-	
-	draw_rect(Rect2(700,170,535,410),Color("#0d1e2a"),true)
-	draw_rect(Rect2(700,170,535,410),Color("#345365"),false,3)
-	draw_string(font,Vector2(735,215),"PERSONALIZACIÓN",HORIZONTAL_ALIGNMENT_LEFT,-1,28,WHITE)
-	draw_button(Rect2(735,240,465,48),"PIEL","skin")
-	draw_button(Rect2(735,300,465,48),"CABELLO","hair")
-	draw_button(Rect2(735,360,465,48),"BARBA / ESTILO","style")
-	draw_button(Rect2(735,420,465,48),"COLOR DE BARBA","beard")
-	draw_button(Rect2(735,480,465,48),"ASOCIACIÓN: "+association_names[association_index],"association",PANEL2)
-	draw_string(font,Vector2(735,555),"CLUB  •  "+club_names[association_index%club_names.size()],HORIZONTAL_ALIGNMENT_LEFT,-1,16,GOLD)
-	draw_string(font,Vector2(735,580),"Licencia / categoría: C → B → A → AA",HORIZONTAL_ALIGNMENT_LEFT,-1,15,MUTED)
-	draw_button(Rect2(850,620,300,55),"VOLVER","back")
+	title("COLEADOR",55,40)
+	draw_string(font,Vector2(55,100),"CREA TU COLEADOR",HORIZONTAL_ALIGNMENT_LEFT,-1,25,GOLD)
+	draw_string(font,Vector2(55,128),"Personaliza rostro, cabello, barba, sombrero y uniforme.",HORIZONTAL_ALIGNMENT_LEFT,-1,16,MUTED)
+	draw_rect(Rect2(35,155,585,500),Color("#0b1d29"),true)
+	draw_rect(Rect2(35,155,585,500),Color("#476779"),false,3)
+	draw_rect(Rect2(55,175,545,340),Color("#244555"),true)
+	draw_circle(Vector2(330,315),130,Color(0.18,0.52,0.65,0.10))
+	draw_character(Vector2(330,405),horse_colors[selected_horse],skin,hair,beard)
+	draw_string(font,Vector2(70,555),"PIEL  "+str(skin_index+1)+"/6",HORIZONTAL_ALIGNMENT_LEFT,-1,15,GOLD)
+	draw_string(font,Vector2(210,555),"CABELLO  "+str(hair_style_index+1)+"/6",HORIZONTAL_ALIGNMENT_LEFT,-1,15,GOLD)
+	draw_string(font,Vector2(385,555),"BARBA  "+str(beard_style_index+1)+"/6",HORIZONTAL_ALIGNMENT_LEFT,-1,15,GOLD)
+	draw_string(font,Vector2(70,585),"SOMBRERO  "+str(hat_index+1)+"/5",HORIZONTAL_ALIGNMENT_LEFT,-1,15,GOLD)
+	draw_string(font,Vector2(230,585),"UNIFORME  "+str(shirt_index+1)+"/6",HORIZONTAL_ALIGNMENT_LEFT,-1,15,GOLD)
+
+	draw_rect(Rect2(650,155,585,500),Color("#0d1e2a"),true)
+	draw_rect(Rect2(650,155,585,500),Color("#476779"),false,3)
+	draw_string(font,Vector2(680,195),"PERSONALIZACIÓN",HORIZONTAL_ALIGNMENT_LEFT,-1,27,WHITE)
+	draw_button(Rect2(680,220,260,55),"TONO DE PIEL","skin",PANEL2)
+	draw_button(Rect2(950,220,245,55),"CORTE DE CABELLO","hair",PANEL2)
+	draw_button(Rect2(680,290,260,55),"TIPO DE BARBA","beard",PANEL2)
+	draw_button(Rect2(950,290,245,55),"COLOR DE CABELLO","hair_color",PANEL2)
+	draw_button(Rect2(680,360,260,55),"COLOR DE BARBA","beard_color",PANEL2)
+	draw_button(Rect2(950,360,245,55),"SOMBRERO","hat",PANEL2)
+	draw_button(Rect2(680,430,260,55),"UNIFORME","shirt",PANEL2)
+	draw_button(Rect2(950,430,245,55),"ASOCIACIÓN","association",PANEL2)
+	draw_string(font,Vector2(680,520),"CLUB",HORIZONTAL_ALIGNMENT_LEFT,-1,13,MUTED)
+	draw_string(font,Vector2(680,545),club_names[selected_club],HORIZONTAL_ALIGNMENT_LEFT,510,18,GOLD)
+	draw_string(font,Vector2(680,580),"CATEGORÍA  C  •  B  •  A  •  AA",HORIZONTAL_ALIGNMENT_LEFT,-1,16,MUTED)
+	draw_button(Rect2(915,610,280,45),"VOLVER","back")
 
 func draw_clubs():
 	title("CLUBES Y ASOCIACIONES",68,40)
