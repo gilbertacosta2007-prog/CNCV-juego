@@ -1,6 +1,6 @@
 extends Node2D
 
-# CNBC - Campeonato Nacional de Coleo Venezolano
+# FEVECO - Campeonato Nacional de Coleo Venezolano
 # First playable prototype: menu, customization, stable/shop, tournament,
 # touch controls, chase, timed tail-grab QTE and scoring.
 
@@ -16,6 +16,7 @@ const RED := Color("#d83b45")
 const GREEN := Color("#43d17b")
 const SKY := Color("#36b9e8")
 const DIRT := Color("#9a6844")
+const SAVE_PATH := "user://feveco_save.json"
 
 var screen := "menu"
 var selected_club := 0
@@ -97,12 +98,83 @@ var font: Font
 
 func _ready():
 	font = ThemeDB.fallback_font
+	load_state()
 	queue_redraw()
+
+func save_state():
+	var data = {
+		"coins": coins,
+		"selected_horse": selected_horse,
+		"selected_bull": selected_bull,
+		"skin_index": skin_index,
+		"hair_style_index": hair_style_index,
+		"beard_style_index": beard_style_index,
+		"hair_color_index": hair_color_index,
+		"beard_color_index": beard_color_index,
+		"hat_index": hat_index,
+		"shirt_index": shirt_index,
+		"selected_club": selected_club,
+		"selected_category": selected_category,
+		"selected_tournament": selected_tournament,
+		"selected_venue": selected_venue,
+		"association_index": association_index,
+		"championship_points": championship_points,
+		"championship_turns": championship_turns,
+		"championship_round": championship_round,
+		"total_score": total_score,
+		"rival_points": rival_points
+	}
+	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	if file:
+		file.store_string(JSON.stringify(data))
+		file.close()
+
+func load_state():
+	if not FileAccess.file_exists(SAVE_PATH):
+		return
+	var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
+	if not file:
+		return
+	var parsed = JSON.parse_string(file.get_as_text())
+	file.close()
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return
+	coins = int(parsed.get("coins", coins))
+	selected_horse = int(parsed.get("selected_horse", selected_horse))
+	selected_bull = int(parsed.get("selected_bull", selected_bull))
+	skin_index = int(parsed.get("skin_index", skin_index))
+	hair_style_index = int(parsed.get("hair_style_index", hair_style_index))
+	beard_style_index = int(parsed.get("beard_style_index", beard_style_index))
+	hair_color_index = int(parsed.get("hair_color_index", hair_color_index))
+	beard_color_index = int(parsed.get("beard_color_index", beard_color_index))
+	hat_index = int(parsed.get("hat_index", hat_index))
+	shirt_index = int(parsed.get("shirt_index", shirt_index))
+	selected_club = int(parsed.get("selected_club", selected_club))
+	selected_category = int(parsed.get("selected_category", selected_category))
+	selected_tournament = int(parsed.get("selected_tournament", selected_tournament))
+	selected_venue = int(parsed.get("selected_venue", selected_venue))
+	association_index = int(parsed.get("association_index", association_index))
+	championship_points = float(parsed.get("championship_points", championship_points))
+	championship_turns = int(parsed.get("championship_turns", championship_turns))
+	championship_round = int(parsed.get("championship_round", championship_round))
+	total_score = float(parsed.get("total_score", total_score))
+	var saved_rivals = parsed.get("rival_points", [])
+	if saved_rivals is Array:
+		for i in range(min(saved_rivals.size(), rival_points.size())):
+			rival_points[i] = float(saved_rivals[i])
+	_apply_custom_colors()
 
 func _process(delta):
 	if screen == "game":
 		update_game(delta)
 	queue_redraw()
+
+func _apply_custom_colors():
+	var skins=[Color("#3d2418"),Color("#6b4028"),Color("#8a5a3b"),Color("#ad744a"),Color("#c88758"),Color("#e0a979")]
+	var hc=[Color("#17110e"),Color("#3b2115"),Color("#6b3c20"),Color("#9a5728"),Color("#c08a3d"),Color("#d7b16a")]
+	skin = skins[clamp(skin_index,0,skins.size()-1)]
+	hair = hc[clamp(hair_color_index,0,hc.size()-1)]
+	beard = hc[clamp(beard_color_index,0,hc.size()-1)]
 
 func update_joystick(p: Vector2):
 	var delta=p-joystick_center
@@ -229,6 +301,7 @@ func activate_button(id: String):
 			selected_venue=(selected_venue+1)%venue_names.size()
 		"reset_campaign":
 			reset_campaign()
+	save_state()
 
 func start_game():
 	validate_championship_selection()
@@ -244,6 +317,7 @@ func start_game():
 	player_vel=Vector2(120,0)
 	bull_vel=Vector2(-55,0)
 	championship_status="EN CURSO"
+	save_state()
 
 func update_game(delta):
 	elapsed += delta
@@ -279,6 +353,7 @@ func update_game(delta):
 	if elapsed >= turn_time:
 		finish_championship_turn()
 		screen="result"
+		save_state()
 
 func validate_championship_selection():
 	# Los torneos nacionales por categoría solo aceptan categorías compatibles.
@@ -300,6 +375,7 @@ func reset_campaign():
 	for i in range(rival_points.size()):
 		rival_points[i]=0.0
 	screen="tournaments"
+	save_state()
 
 func finish_championship_turn():
 	total_score += score
@@ -409,7 +485,7 @@ func draw_menu():
 		]),PackedColorArray([Color(0.7,0.9,1.0,0.025),Color(0.7,0.9,1.0,0.025),Color(0.7,0.9,1.0,0.025),Color(0.7,0.9,1.0,0.025)]))
 	
 	# Marca
-	draw_string(font,Vector2(48,62),"CNBC",HORIZONTAL_ALIGNMENT_LEFT,-1,48,GOLD)
+	draw_string(font,Vector2(48,62),"FEVECO",HORIZONTAL_ALIGNMENT_LEFT,-1,48,GOLD)
 	draw_string(font,Vector2(51,91),"CAMPEONATO NACIONAL DE COLEO VENEZOLANO",HORIZONTAL_ALIGNMENT_LEFT,-1,16,MUTED)
 	
 	# Encabezado de temporada
@@ -525,7 +601,7 @@ func draw_game():
 	# HUD premium.
 	draw_rect(Rect2(20,14,455,52),Color(0.02,0.06,0.09,0.76),true)
 	draw_rect(Rect2(20,14,455,52),Color("#e7c756"),false,2)
-	draw_string(font,Vector2(38,47),"CNBC  •  MANGA DE COLEO",HORIZONTAL_ALIGNMENT_LEFT,-1,21,WHITE)
+	draw_string(font,Vector2(38,47),"FEVECO  •  MANGA DE COLEO",HORIZONTAL_ALIGNMENT_LEFT,-1,21,WHITE)
 	draw_rect(Rect2(900,14,330,52),Color(0.02,0.06,0.09,0.76),true)
 	draw_string(font,Vector2(925,47),"PUNTOS  %.0f"%score,HORIZONTAL_ALIGNMENT_LEFT,-1,22,GOLD)
 	draw_string(font,Vector2(1100,47),"%.0f s"%max(0.0,turn_time-elapsed),HORIZONTAL_ALIGNMENT_LEFT,-1,21,WHITE)
@@ -648,8 +724,8 @@ func draw_bull(p:Vector2,c:Color):
 
 
 func draw_poly(points:PackedVector2Array, colors:PackedColorArray):
-	if colors.size() > 0:
-		draw_colored_polygon(points, colors[0])
+	if points.size() >= 3 and colors.size() > 0:
+		draw_polygon(points, colors)
 
 
 func draw_ellipse(center:Vector2,r:Vector2,c:Color):
@@ -810,7 +886,7 @@ func draw_clubs():
 	draw_circle(Vector2(220,305),92,Color("#0b1720"))
 	draw_circle(Vector2(220,305),72,Color("#e2b83f"))
 	draw_circle(Vector2(220,305),58,Color("#17344b"))
-	draw_string(font,Vector2(145,315),"CNBC",HORIZONTAL_ALIGNMENT_CENTER,150,30,WHITE)
+	draw_string(font,Vector2(145,315),"FEVECO",HORIZONTAL_ALIGNMENT_CENTER,150,30,WHITE)
 	draw_string(font,Vector2(108,385),"REPRESENTACIÓN",HORIZONTAL_ALIGNMENT_CENTER,225,16,GOLD)
 
 	# Datos reales de referencia

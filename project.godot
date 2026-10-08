@@ -1,5 +1,5 @@
 [application]
-config/name="CNB"
+config/name="FEVECO"
 run/main_scene="res://main.tscn"
 config/icon="res://assets/feveco_icon_final.jpg"
 config/features=PackedStringArray("4.3", "GL Compatibility")
