@@ -247,7 +247,7 @@ func validate_championship_selection():
 	var wanted=category_names[selected_category]
 	if wanted not in allowed:
 		if allowed.size() > 0:
-			for i in category_names.size():
+			for i in range(category_names.size()):
 				if category_names[i] == allowed[0]:
 					selected_category=i
 					break
@@ -258,7 +258,7 @@ func reset_campaign():
 	championship_round=0
 	player_championship_position=0
 	championship_status="EN CURSO"
-	for i in rival_points.size():
+	for i in range(rival_points.size()):
 		rival_points[i]=0.0
 	screen="tournaments"
 
@@ -266,17 +266,17 @@ func finish_championship_turn():
 	total_score += score
 	championship_points += score * 10.0
 	# CPU fuerte: rivales con efectividad alta y una pequeña variación por turno.
-	for i in rival_points.size():
+	for i in range(rival_points.size()):
 		var base=max(2.0, score * rival_skill[i])
 		var pressure=randf_range(0.8, 3.8) * rival_skill[i]
 		rival_points[i] += base + pressure
 	var table=[]
 	table.append({"name":"TÚ • "+club_names[selected_club],"points":championship_points,"player":true})
-	for i in rival_names.size():
+	for i in range(rival_names.size()):
 		table.append({"name":rival_names[i]+" • "+rival_clubs[i],"points":rival_points[i],"player":false})
 	table.sort_custom(func(a,b): return a.points > b.points)
 	player_championship_position=1
-	for row in table.size():
+	for row in range(table.size()):
 		if table[row].player:
 			player_championship_position=row+1
 			break
@@ -299,7 +299,7 @@ func get_round_name()->String:
 func get_championship_table()->Array:
 	var table=[]
 	table.append({"name":"TÚ • "+club_names[selected_club],"points":championship_points,"player":true})
-	for i in rival_names.size():
+	for i in range(rival_names.size()):
 		table.append({"name":rival_names[i],"points":rival_points[i],"player":false})
 	table.sort_custom(func(a,b): return a.points > b.points)
 	return table
@@ -363,7 +363,7 @@ func draw_menu():
 	# Luces de estadio
 	draw_circle(Vector2(1110,90),170,Color(0.25,0.75,0.9,0.07))
 	draw_circle(Vector2(160,620),190,Color(0.95,0.55,0.15,0.05))
-	for i in 0..7:
+	for i in range(8):
 		var beam_x=520+i*92
 		draw_polygon(PackedVector2Array([
 			Vector2(beam_x,0),Vector2(beam_x+18,0),Vector2(beam_x+110,235),Vector2(beam_x+60,235)
@@ -388,11 +388,11 @@ func draw_menu():
 	draw_rect(Rect2(612,60,598,330),Color("#4e7180"),true)
 	draw_rect(Rect2(612,205,598,185),Color("#9a6844"),true)
 	draw_rect(Rect2(612,193,598,14),Color("#e2d5a5"),true)
-	for i in 0..11:
+	for i in range(12):
 		var sx=630+i*49
 		draw_line(Vector2(sx,132),Vector2(sx,198),Color("#d7cfad"),3)
 		draw_circle(Vector2(sx,126),8,Color("#d83b45") if i%3==0 else Color("#eee6c9"))
-	for i in 0..16:
+	for i in range(17):
 		draw_circle(Vector2(625+i*34,178+(i%3)*5),4,Color("#d7dde0"))
 	
 	# Acción principal de la portada
@@ -438,7 +438,7 @@ func draw_menu():
 func draw_manga_preview(pos:Vector2,size:Vector2):
 	draw_rect(Rect2(pos,size),Color("#1c3440"),true)
 	draw_rect(Rect2(pos+Vector2(18,18),size-Vector2(36,36)),Color("#9b6b43"),true)
-	for i in 0..9:
+	for i in range(10):
 		draw_line(pos+Vector2(25+i*40,25),pos+Vector2(25+i*40,55),Color("#b7b7a4"),4)
 	draw_circle(pos+Vector2(170,145),42,horse_colors[selected_horse])
 	draw_circle(pos+Vector2(265,135),31,bull_colors[selected_bull])
@@ -453,16 +453,16 @@ func draw_game():
 	
 	# Gradas en profundidad
 	draw_rect(Rect2(0,88,W,70),Color("#263844"),true)
-	for row in 0..2:
+	for row in range(3):
 		var ry=102+row*20
 		draw_line(Vector2(20,ry),Vector2(1260,ry),Color("#455866"),7)
-		for i in 0..31:
+		for i in range(32):
 			var sx=25+i*40+(row%2)*10
 			var shirt=Color("#d9e1e5") if i%4 else Color("#c93d46")
 			draw_circle(Vector2(sx,ry-7),4,shirt)
 	
 	# Banderas y postes
-	for i in 0..15:
+	for i in range(16):
 		var fx=25+i*82
 		draw_line(Vector2(fx,55),Vector2(fx,178),Color("#6b5140"),3)
 		var fc=Color("#c93743") if i%2==0 else Color("#f0e4b5")
@@ -473,22 +473,22 @@ func draw_game():
 	# Baranda de la manga
 	draw_rect(Rect2(0,154,W,12),Color("#e9dfb7"),true)
 	draw_line(Vector2(0,166),Vector2(W,166),Color("#71583f"),5)
-	for i in 0..25:
+	for i in range(26):
 		var bx=i*52
 		draw_line(Vector2(bx,145),Vector2(bx,183),Color("#d8d0b2"),4)
 	
 	# Piso de arena con zonas de rodada
 	draw_rect(Rect2(0,184,W,H-184),Color("#9a6844"),true)
 	draw_rect(Rect2(0,184,W,H-184),Color("#a9754b"),false,8)
-	for i in 0..20:
+	for i in range(21):
 		var gx=40+i*61
 		draw_line(Vector2(gx,205),Vector2(gx+120,680),Color(0.34,0.22,0.14,0.12),2)
-	for i in 0..10:
+	for i in range(11):
 		var gy=225+i*42
 		draw_line(Vector2(20,gy),Vector2(1260,gy+28),Color(0.95,0.78,0.55,0.08),3)
 	
 	# Polvo y huellas
-	for i in 0..18:
+	for i in range(19):
 		var dx=60+i*67
 		var dy=585-(i%4)*23
 		draw_circle(Vector2(dx,dy),3+(i%3)*2,Color(0.92,0.78,0.58,0.18))
@@ -543,7 +543,7 @@ func draw_game():
 	draw_string(font,Vector2(968,553),"↑ ACELERAR     •     FRENAR",HORIZONTAL_ALIGNMENT_LEFT,-1,16,WHITE)
 
 func draw_speed_dust(p:Vector2):
-	for i in 0..7:
+	for i in range(8):
 		var off=Vector2(-55-i*11,24+(i%3)*8)
 		var r=3+(i%3)*2
 		draw_circle(p+off,r,Color(0.95,0.82,0.62,0.12+(i%3)*0.025))
@@ -571,7 +571,7 @@ func draw_character(p:Vector2, hc:Color, sc:Color, hairc:Color, beardc:Color):
 		p+Vector2(88,-68),p+Vector2(100,-91),p+Vector2(101,-58)
 	]),hc.darkened(0.05))
 	# Crin
-	for i in 0..4:
+	for i in range(5):
 		draw_line(p+Vector2(48+i*7,-57-i*2),p+Vector2(36+i*5,-42+i*3),hairc,5)
 	# Ojo y hocico
 	draw_circle(p+Vector2(90,-55),4,Color("#10151a"))
@@ -629,13 +629,13 @@ func draw_bull(p:Vector2,c:Color):
 	draw_line(p+Vector2(-82,2),p+Vector2(-125,22),c.darkened(0.18),8)
 	draw_line(p+Vector2(-124,22),p+Vector2(-139,14),Color("#211a16"),7)
 	# Destellos de polvo en patas
-	for i in 0..5:
+	for i in range(6):
 		draw_circle(p+Vector2(-60+i*22,64+(i%2)*5),3,Color(0.95,0.78,0.56,0.22))
 
 
 func draw_ellipse(center:Vector2,r:Vector2,c:Color):
 	var pts=PackedVector2Array()
-	for i in 0..31:
+	for i in range(32):
 		var a=TAU*i/32.0
 		pts.append(center+Vector2(cos(a)*r.x,sin(a)*r.y))
 	draw_colored_polygon(pts,c)
@@ -648,7 +648,7 @@ func draw_result():
 	draw_rect(Rect2(45,190,590,390),Color("#345365"),false,3)
 	draw_string(font,Vector2(70,228),"CLASIFICACIÓN CPU",HORIZONTAL_ALIGNMENT_LEFT,-1,24,WHITE)
 	var table=get_championship_table()
-	for i in table.size():
+	for i in range(table.size()):
 		var y=265+i*34
 		var is_player=table[i].player
 		draw_rect(Rect2(65,y-22,550,29),Color("#24485b") if is_player else Color("#132b39"),true)
@@ -806,7 +806,7 @@ func draw_clubs():
 	draw_rect(Rect2(835,170,400,420),Color("#0d1e2a"),true)
 	draw_rect(Rect2(835,170,400,420),Color("#345365"),false,3)
 	draw_string(font,Vector2(865,215),"CLUBES DESTACADOS",HORIZONTAL_ALIGNMENT_LEFT,-1,28,WHITE)
-	for i in club_names.size():
+	for i in range(club_names.size()):
 		var y=245+i*40
 		var selected=i==selected_club
 		draw_rect(Rect2(860,y-24,350,34),Color("#24485b") if selected else Color("#132b39"),true)
@@ -818,7 +818,7 @@ func draw_tournaments():
 	draw_string(font,Vector2(55,140),"Calendario basado en FEVECO; la competición jugable es propia de CNBC.",HORIZONTAL_ALIGNMENT_LEFT,-1,15,MUTED)
 	draw_rect(Rect2(45,170,650,420),Color("#102a39"),true)
 	draw_rect(Rect2(45,170,650,420),Color("#3e6070"),false,3)
-	for i in tournament_names.size():
+	for i in range(tournament_names.size()):
 		var y=188+i*48
 		var selected=i==selected_tournament
 		draw_rect(Rect2(70,y,600,38),Color("#24485b") if selected else Color("#132f3e"),true)
