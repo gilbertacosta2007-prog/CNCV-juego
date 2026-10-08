@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#5ca5c8"/><stop offset=".58" stop-color="#b8d8df"/><stop offset="1" stop-color="#e7d9b4"/></linearGradient>
+ <linearGradient id="dirt" x2="0" y2="1"><stop stop-color="#c18a58"/><stop offset=".48" stop-color="#a66c42"/><stop offset="1" stop-color="#72452f"/></linearGradient>
+ <linearGradient id="stand" x2="0" y2="1"><stop stop-color="#253b47"/><stop offset="1" stop-color="#101f29"/></linearGradient>
+ <linearGradient id="rail" x2="0" y2="1"><stop stop-color="#fff0c5"/><stop offset=".5" stop-color="#b89b69"/><stop offset="1" stop-color="#5b4733"/></linearGradient>
+ <radialGradient id="sun"><stop stop-color="#fff7cf" stop-opacity=".8"/><stop offset="1" stop-color="#fff7cf" stop-opacity="0"/></radialGradient>
+ <pattern id="crowd" width="42" height="24" patternUnits="userSpaceOnUse"><rect width="42" height="24" fill="#172a35"/><g stroke="#0b1720" stroke-width="2"><path d="M0 23H42"/></g><g><circle cx="7" cy="7" r="3.5" fill="#b98e70"/><path d="M3 12h8v7H3z" fill="#d44c45"/><circle cx="21" cy="8" r="3.5" fill="#d1a27e"/><path d="M16 13h10v6H16z" fill="#e5e4dc"/><circle cx="35" cy="7" r="3.5" fill="#8c654f"/><path d="M30 12h10v7H30z" fill="#d6b54f"/></g></pattern>
+ <pattern id="sand" width="79" height="53" patternUnits="userSpaceOnUse"><circle cx="8" cy="12" r="2" fill="#e3b17b" opacity=".4"/><circle cx="42" cy="36" r="1.5" fill="#583a2a" opacity=".24"/><path d="M20 46l11 -3M56 9l7 -2" stroke="#f0c38d" stroke-width="1.4" opacity=".28"/></pattern>
+</defs>
+<rect width="1280" height="720" fill="url(#sky)"/>
+<circle cx="1070" cy="76" r="130" fill="url(#sun)"/><circle cx="1070" cy="76" r="34" fill="#fff1b6" opacity=".72"/>
+<!-- distant llanos -->
+<path d="M0 164 Q160 128 310 159T620 151T930 158T1280 143V250H0Z" fill="#6c987b" opacity=".72"/>
+<!-- grandstand silhouette and roof -->
+<path d="M0 91L1280 61V192L0 207Z" fill="#233a46"/>
+<path d="M0 83L1280 52L1280 75L0 108Z" fill="#e8ddbd"/>
+<path d="M0 108L1280 75L1280 90L0 123Z" fill="#6b533d"/>
+<rect x="0" y="122" width="1280" height="90" fill="url(#stand)"/>
+<path d="M0 140L1280 110M0 166L1280 137M0 191L1280 163" stroke="#536c77" stroke-width="4" opacity=".75"/>
+<g transform="translate(0 127) skewY(-2)">
+ <rect x="0" y="0" width="1280" height="79" fill="url(#crowd)" opacity=".98"/>
+ <path d="M0 25H1280M0 52H1280" stroke="#7f9295" stroke-width="3" opacity=".45"/>
+</g>
+<!-- stadium floodlights -->
+<g stroke="#384b53" stroke-width="9"><path d="M78 24V125"/><path d="M1202 8V112"/></g>
+<g fill="#fff9dc"><rect x="39" y="16" width="79" height="19" rx="4"/><rect x="1164" y="2" width="78" height="19" rx="4"/></g>
+<g stroke="#fff4c7" stroke-width="3" opacity=".38"><path d="M48 35L160 160M75 35L200 160M1200 21L1090 151M1228 21L1120 151"/></g>
+<!-- Venezuelan tricolor streamers -->
+<g><path d="M170 79V176M245 76V176M1032 65V174M1108 63V171" stroke="#725b42" stroke-width="4"/>
+<path d="M172 82l50 11-50 13z" fill="#e6c23f"/><path d="M172 93l50 11-50 13z" fill="#315ea8"/><path d="M172 104l50 11-50 13z" fill="#c84145"/>
+<path d="M247 80l46 10-46 12z" fill="#c84145"/><path d="M247 90l46 10-46 12z" fill="#f3f0dd"/><path d="M247 100l46 10-46 12z" fill="#d7b83c"/>
+<path d="M1034 69l-47 10 47 13z" fill="#d7b83c"/><path d="M1034 79l-47 10 47 13z" fill="#315ea8"/><path d="M1034 89l-47 10 47 13z" fill="#c84145"/>
+<path d="M1110 67l-45 10 45 12z" fill="#c84145"/><path d="M1110 77l-45 10 45 12z" fill="#f3f0dd"/><path d="M1110 87l-45 10 45 12z" fill="#d7b83c"/></g>
+<!-- rails and arena edge -->
+<path d="M0 190H1280V232H0Z" fill="#8d6a47"/><path d="M0 193H1280V204H0Z" fill="url(#rail)"/><path d="M0 217H1280V228H0Z" fill="#e9d6a8"/>
+<g stroke="#eadab1" stroke-width="8"><path d="M25 190V236M85 190V236M145 190V236M205 190V236M265 190V236M325 190V236M385 190V236M445 190V236M505 190V236M565 190V236M625 190V236M685 190V236M745 190V236M805 190V236M865 190V236M925 190V236M985 190V236M1045 190V236M1105 190V236M1165 190V236M1225 190V236"/></g>
+<path d="M0 233H1280V720H0Z" fill="url(#dirt)"/>
+<path d="M0 233H1280V720H0Z" fill="url(#sand)" opacity=".92"/>
+<!-- perspective lane marks -->
+<g fill="none" stroke="#e7bb85" opacity=".22" stroke-width="3"><path d="M640 233L-80 720"/><path d="M640 233L160 720"/><path d="M640 233L430 720"/><path d="M640 233L850 720"/><path d="M640 233L1120 720"/><path d="M640 233L1360 720"/></g>
+<g fill="none" stroke="#5e3929" opacity=".24" stroke-width="3"><path d="M0 310Q640 355 1280 310"/><path d="M0 414Q640 450 1280 414"/><path d="M0 530Q640 560 1280 530"/><path d="M0 642Q640 660 1280 642"/></g>
+<!-- hoof scuffs and dust patches -->
+<g fill="#6b402b" opacity=".2"><ellipse cx="180" cy="430" rx="70" ry="14"/><ellipse cx="920" cy="515" rx="105" ry="18"/><ellipse cx="590" cy="610" rx="135" ry="20"/><ellipse cx="1110" cy="350" rx="56" ry="10"/></g>
+<g fill="#f1c58c" opacity=".32"><circle cx="92" cy="355" r="3"/><circle cx="210" cy="580" r="2"/><circle cx="366" cy="460" r="2.5"/><circle cx="478" cy="332" r="2"/><circle cx="735" cy="492" r="3"/><circle cx="850" cy="388" r="2"/><circle cx="1035" cy="608" r="2.5"/><circle cx="1180" cy="460" r="2"/></g>
+<!-- edge vignette -->
+<rect width="1280" height="720" fill="none" stroke="#10222a" stroke-width="24" opacity=".34"/>
+</svg>
