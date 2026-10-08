@@ -714,48 +714,12 @@ func draw_game():
 	draw_button(Rect2(40,35,175,58),"‹  MENÚ","game_menu",Color("#16374b"))
 	draw_button(Rect2(225,35,175,58),"SALIR","game_exit",Color("#4a2730"))
 
-	draw_rect(Rect2(0,0,W,H),Color("#6aaec9"),true)
-	draw_rect(Rect2(0,0,W,180),Color("#7fc3da"),true)
-	draw_circle(Vector2(1110,70),46,Color("#f6d983"))
-	draw_circle(Vector2(1110,70),67,Color(1,0.86,0.48,0.08))
-	# Gradas profundas.
-	draw_rect(Rect2(0,82,W,92),Color("#172832"),true)
-	for row in range(4):
-		var y=108+row*18
-		draw_rect(Rect2(0,y,W,5),Color("#405865"),true)
-		for i in range(42):
-			var x=14+i*31+(row%2)*9
-			var shirt=[Color("#e8e8df"),Color("#d4484b"),Color("#e6cf7e"),Color("#72aec5")][i%4]
-			draw_circle(Vector2(x,y-5),4,shirt)
-			draw_circle(Vector2(x,y-9),3,Color("#c29a76"))
-	draw_line(Vector2(0,80),Vector2(W,80),Color("#ead9a7"),4)
-	for i in range(17):
-		var x=18+i*78
-		draw_line(Vector2(x,45),Vector2(x,182),Color("#604a38"),4)
-		var fc=Color("#d63d45") if i%2==0 else Color("#f2e1aa")
-		draw_poly(PackedVector2Array([Vector2(x,48),Vector2(x+38,61),Vector2(x,74)]),PackedColorArray([fc]))
-	# Baranda.
-	draw_rect(Rect2(0,157,W,9),Color("#e9d9ac"),true)
-	draw_rect(Rect2(0,169,W,8),Color("#654b38"),true)
-	for i in range(29): draw_line(Vector2(i*46,145),Vector2(i*46,188),Color("#d7ceb2"),5)
-	# Arena con perspectiva y textura.
-	draw_rect(Rect2(0,184,W,H-184),Color("#95613f"),true)
-	# Luz y profundidad de estadio.
-	draw_circle(Vector2(260,260),190,Color(1.0,0.86,0.55,0.055))
-	draw_circle(Vector2(980,330),240,Color(0.25,0.75,0.95,0.045))
-	draw_line(Vector2(0,690),Vector2(W,690),Color("#6f442e"),12)
-	draw_line(Vector2(0,675),Vector2(W,675),Color("#c58a55"),3)
-	draw_rect(Rect2(0,184,W,H-184),Color("#b4774c"),false,7)
-	for i in range(8):
-		draw_line(Vector2(0,210+i*62),Vector2(W,244+i*62),Color(1,0.83,0.58,0.055),5)
-	for i in range(22):
-		var x=-30+i*64
-		draw_line(Vector2(x,205),Vector2(x+145,680),Color(0.22,0.12,0.07,0.13),2)
-	for i in range(52):
-		draw_circle(Vector2(35+(i*97)%1200,205+(i*53)%440),1+(i%4),Color(0.45,0.26,0.15,0.13))
-	# Marcas circulares de la manga.
-	for i in range(8):
-		draw_arc(Vector2(110+i*165,475),90,0.1,2.95,32,Color(0.32,0.17,0.10,0.13),3)
+	# Fondo ilustrado de alta calidad: graderías, banderas, reflectores y textura de arena.
+	var arena_bg = load("res://assets/sprites/arena_background.svg")
+	if arena_bg:
+		draw_texture_rect(arena_bg, Rect2(0,0,W,H), false)
+	else:
+		draw_rect(Rect2(0,0,W,H), Color("#95613f"), true)
 	# HUD premium.
 	draw_rect(Rect2(20,14,455,52),Color(0.02,0.06,0.09,0.76),true)
 	draw_rect(Rect2(20,14,455,52),Color("#e7c756"),false,2)
