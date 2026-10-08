@@ -45,6 +45,30 @@ var horse_names := ["Alazán", "Negro", "Palomino", "Tordillo", "Zaino", "Bayo"]
 var bull_colors := [Color("#302820"), Color("#5c4636"), Color("#181818"), Color("#765d47")]
 var bull_names := ["Castaño", "Colorado", "Negro", "Barcino"]
 var coins := 1500
+
+# Datos inspirados en registros públicos de FEVECO para dar identidad venezolana al V1.
+var association_index := 0
+var association_names := [
+	"Apure","Aragua","Barinas","Bolívar","Carabobo","Cojedes","Delta Amacuro",
+	"Falcón","Guárico","Lara","Miranda","Monagas","Nueva Esparta","Portuguesa",
+	"Sucre","Táchira","Trujillo","Yaracuy","Zulia","Amazonas","La Guaira","Distrito Capital"
+]
+var club_names := [
+	"Club de Coleo Sota de Oro","Club de Coleo Tinaquillo","Club San Juan Bautista",
+	"Club de Coleo Naranjeros de Carabobo","Club de Coleo UDS","Club de Coleo Lara",
+	"Club Deportivo de Coleo Yocoima","Los Herederos del Llano"
+]
+var venue_names := ["Manga Juan Canelón","Manga Don Pedro Maya"]
+var tournament_names := [
+	"Campeonato Categoría C",
+	"Copa 67 Aniversario",
+	"Copa Cheo Hernández Prisco",
+	"Campeonato Categoría B",
+	"Campeonato Categoría A",
+	"Campeonato Categoría AA",
+	"Campeonato Categoría Master",
+	"Campeonato Categoría Supermaster"
+]
 var font: Font
 
 func _ready():
@@ -125,6 +149,11 @@ func activate_button(id: String):
 			beard=hair
 		"style":
 			hair_style=(hair_style+1)%3
+		"association":
+			association_index=(association_index+1)%association_names.size()
+		"venue":
+			# La manga se alternará al iniciar la siguiente partida.
+			pass
 
 func start_game():
 	screen="game"
@@ -612,23 +641,44 @@ func draw_custom():
 	
 	draw_rect(Rect2(700,170,535,410),Color("#0d1e2a"),true)
 	draw_rect(Rect2(700,170,535,410),Color("#345365"),false,3)
-	draw_string(font,Vector2(735,220),"PERSONALIZACIÓN",HORIZONTAL_ALIGNMENT_LEFT,-1,30,WHITE)
-	
-	draw_button(Rect2(735,250,465,52),"PIEL","skin")
-	draw_button(Rect2(735,315,465,52),"CABELLO","hair")
-	draw_button(Rect2(735,380,465,52),"BARBA / ESTILO","style")
-	draw_button(Rect2(735,445,465,52),"COLOR DE BARBA","beard")
-	
-	draw_string(font,Vector2(735,535),"PERSONAJE GUARDADO",HORIZONTAL_ALIGNMENT_LEFT,-1,17,GREEN)
+	draw_string(font,Vector2(735,215),"PERSONALIZACIÓN",HORIZONTAL_ALIGNMENT_LEFT,-1,28,WHITE)
+	draw_button(Rect2(735,240,465,48),"PIEL","skin")
+	draw_button(Rect2(735,300,465,48),"CABELLO","hair")
+	draw_button(Rect2(735,360,465,48),"BARBA / ESTILO","style")
+	draw_button(Rect2(735,420,465,48),"COLOR DE BARBA","beard")
+	draw_button(Rect2(735,480,465,48),"ASOCIACIÓN: "+association_names[association_index],"association",PANEL2)
+	draw_string(font,Vector2(735,555),"CLUB  •  "+club_names[association_index%club_names.size()],HORIZONTAL_ALIGNMENT_LEFT,-1,16,GOLD)
+	draw_string(font,Vector2(735,580),"Licencia / categoría: C → B → A → AA",HORIZONTAL_ALIGNMENT_LEFT,-1,15,MUTED)
 	draw_button(Rect2(850,620,300,55),"VOLVER","back")
 
 func draw_tournaments():
-	title("TORNEOS",80)
-	draw_string(font,Vector2(0,135),"Campeonatos y copas",HORIZONTAL_ALIGNMENT_CENTER,W,22,MUTED)
-	var names=["Copa Cheo Hernández","Campeonato Categoría C","Campeonato Categoría B","Campeonato Categoría A"]
-	for i in names.size():
-		draw_button(Rect2(340,185+i*85,600,62),names[i],"play",PANEL2)
-	draw_button(Rect2(470,630,340,55),"VOLVER","back")
+	title("CAMPEONATOS",68,40)
+	draw_string(font,Vector2(55,112),"CALENDARIO NACIONAL",HORIZONTAL_ALIGNMENT_LEFT,-1,25,GOLD)
+	draw_string(font,Vector2(55,140),"Estructura inspirada en el calendario público de FEVECO.",HORIZONTAL_ALIGNMENT_LEFT,-1,17,MUTED)
+	
+	draw_rect(Rect2(45,170,760,420),Color("#102a39"),true)
+	draw_rect(Rect2(45,170,760,420),Color("#3e6070"),false,3)
+	
+	for i in tournament_names.size():
+		var y=190+i*48
+		var accent=GOLD if i==2 else Color("#294858")
+		draw_rect(Rect2(70,y,710,38),Color("#132f3e"),true)
+		draw_rect(Rect2(70,y,6,38),accent,true)
+		draw_string(font,Vector2(90,y+26),tournament_names[i],HORIZONTAL_ALIGNMENT_LEFT,-1,17,WHITE)
+		draw_string(font,Vector2(690,y+26),"NACIONAL",HORIZONTAL_ALIGNMENT_LEFT,-1,13,MUTED)
+	
+	draw_rect(Rect2(835,170,400,420),Color("#0d1e2a"),true)
+	draw_rect(Rect2(835,170,400,420),Color("#345365"),false,3)
+	draw_string(font,Vector2(865,215),"MANGAS",HORIZONTAL_ALIGNMENT_LEFT,-1,28,WHITE)
+	draw_string(font,Vector2(865,250),"VENUE SELECCIONADO",HORIZONTAL_ALIGNMENT_LEFT,-1,14,MUTED)
+	draw_string(font,Vector2(865,282),venue_names[0],HORIZONTAL_ALIGNMENT_LEFT,-1,21,GOLD)
+	draw_string(font,Vector2(865,325),"Próxima sede",HORIZONTAL_ALIGNMENT_LEFT,-1,15,MUTED)
+	draw_string(font,Vector2(865,352),venue_names[1],HORIZONTAL_ALIGNMENT_LEFT,-1,21,WHITE)
+	draw_string(font,Vector2(865,405),"TEMPORADA",HORIZONTAL_ALIGNMENT_LEFT,-1,14,MUTED)
+	draw_string(font,Vector2(865,432),"2025–2026",HORIZONTAL_ALIGNMENT_LEFT,-1,27,WHITE)
+	draw_string(font,Vector2(865,475),"CATEGORÍAS",HORIZONTAL_ALIGNMENT_LEFT,-1,14,MUTED)
+	draw_string(font,Vector2(865,502),"C  •  B  •  A  •  AA",HORIZONTAL_ALIGNMENT_LEFT,-1,22,GOLD)
+	draw_button(Rect2(885,620,300,55),"VOLVER","back")
 
 func draw_shop():
 	title("TIENDA",80)
