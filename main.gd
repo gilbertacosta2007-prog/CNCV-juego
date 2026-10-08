@@ -864,7 +864,7 @@ func draw_profile():
 	draw_string(font,Vector2(0,215),"Puntos acumulados: %.2f"%total_score,HORIZONTAL_ALIGNMENT_CENTER,W,24,GOLD)
 	draw_string(font,Vector2(0,250),"Puntos de campeonato: %.1f"%championship_points,HORIZONTAL_ALIGNMENT_CENTER,W,23,GREEN)
 	draw_string(font,Vector2(0,285),"Club: %s"%club_names[selected_club],HORIZONTAL_ALIGNMENT_CENTER,W,20,WHITE)
-	draw_string(font,Vector2(0,320),"Categoría: %s  •  Manga: %s"%(category_names[selected_category],venue_names[selected_venue]),HORIZONTAL_ALIGNMENT_CENTER,W,20,MUTED)
+	draw_string(font,Vector2(0,320),"Categoría: %s  •  Manga: %s" % [category_names[selected_category], venue_names[selected_venue]],HORIZONTAL_ALIGNMENT_CENTER,W,20,MUTED)
 	draw_string(font,Vector2(0,355),"Torneos disputados: %d"%championship_turns,HORIZONTAL_ALIGNMENT_CENTER,W,20,MUTED)
 	draw_string(font,Vector2(0,390),"Caballo: %s"%horse_names[selected_horse],HORIZONTAL_ALIGNMENT_CENTER,W,22,MUTED)
 	draw_string(font,Vector2(0,300),"Modo: Campeonato Nacional",HORIZONTAL_ALIGNMENT_CENTER,W,22,MUTED)
