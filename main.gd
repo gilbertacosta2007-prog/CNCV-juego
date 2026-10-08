@@ -833,9 +833,15 @@ func draw_bull(p:Vector2,c:Color):
 		draw_circle(p+Vector2(-78+i*15,66+(i%3)*5),2+(i%3),Color(0.98,0.80,0.58,0.16))
 
 
-func draw_poly(points:PackedVector2Array, colors:PackedColorArray):
-	if points.size() >= 3 and colors.size() > 0:
-		draw_colored_polygon(points, colors[0])
+func draw_poly(points:PackedVector2Array, colors):
+	if points.size() < 3:
+		return
+	var fill := Color.WHITE
+	if colors is Color:
+		fill = colors
+	elif colors is PackedColorArray and colors.size() > 0:
+		fill = colors[0]
+	draw_colored_polygon(points, fill)
 
 
 func draw_ellipse(center:Vector2,r:Vector2,c:Color):
@@ -844,6 +850,7 @@ func draw_ellipse(center:Vector2,r:Vector2,c:Color):
 		var a=TAU*i/32.0
 		pts.append(center+Vector2(cos(a)*r.x,sin(a)*r.y))
 	draw_poly(pts,c)
+
 
 func draw_result():
 	title("FIN DEL TURNO",70,44)
