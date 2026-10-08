@@ -57,12 +57,12 @@ jobs:
       - name: Verify APK
         shell: bash
         run: |
-          test -f build/CNBC.apk
-          ls -lh build/CNBC.apk
+          find build -type f -name "*.apk" -print -exec ls -lh {} \;
+          test -n "$(find build -type f -name "*.apk" -print -quit)"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: CNBC-Android-APK
-          path: build/CNBC.apk
+          path: build/*.apk
           if-no-files-found: error
