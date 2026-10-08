@@ -520,36 +520,107 @@ func draw_result():
 	draw_button(Rect2(460,500,360,70),"OTRO TURNO","play",PANEL2)
 
 func draw_horses():
-	title("CABALLOS",80)
-	draw_string(font,Vector2(0,125),"Pelajes inspirados en el caballo criollo venezolano",HORIZONTAL_ALIGNMENT_CENTER,W,22,MUTED)
-	draw_circle(Vector2(640,300),90,horse_colors[selected_horse])
-	draw_string(font,Vector2(0,430),horse_names[selected_horse],HORIZONTAL_ALIGNMENT_CENTER,W,40,WHITE)
-	draw_string(font,Vector2(0,470),"Precio de establo: 500 monedas",HORIZONTAL_ALIGNMENT_CENTER,W,20,MUTED)
-	draw_button(Rect2(300,540,150,65),"‹","prev_horse")
-	draw_button(Rect2(465,540,350,65),"COMPRAR / SELECCIONAR","buy_horse",RED)
-	draw_button(Rect2(830,540,150,65),"›","next_horse")
-	draw_button(Rect2(470,630,340,55),"VOLVER","back")
+	title("CABALLEROS DE LA MANGA",68,40)
+	draw_string(font,Vector2(55,112),"ELIGE TU CABALLO",HORIZONTAL_ALIGNMENT_LEFT,-1,25,GOLD)
+	draw_string(font,Vector2(55,140),"Pelajes inspirados en la tradición ecuestre venezolana.",HORIZONTAL_ALIGNMENT_LEFT,-1,17,MUTED)
+	
+	# Tarjeta principal
+	draw_rect(Rect2(45,170,720,410),Color("#102a39"),true)
+	draw_rect(Rect2(45,170,720,410),Color("#3e6070"),false,3)
+	draw_rect(Rect2(70,195,670,250),Color("#6e8e95"),true)
+	draw_rect(Rect2(70,330,670,115),Color("#9a6844"),true)
+	
+	# caballo grande
+	draw_speed_dust(Vector2(405,365))
+	draw_character(Vector2(400,355),horse_colors[selected_horse],skin,hair,beard)
+	
+	# Navegación
+	draw_button(Rect2(95,485,105,55),"‹","prev_horse")
+	draw_button(Rect2(210,485,250,55),"ELEGIR","buy_horse",RED)
+	draw_button(Rect2(470,485,105,55),"›","next_horse")
+	
+	# Ficha
+	draw_rect(Rect2(790,170,445,410),Color("#0d1e2a"),true)
+	draw_rect(Rect2(790,170,445,410),Color("#345365"),false,3)
+	draw_string(font,Vector2(825,220),horse_names[selected_horse],HORIZONTAL_ALIGNMENT_LEFT,-1,34,WHITE)
+	draw_string(font,Vector2(825,250),"PELaje DE COMPETENCIA",HORIZONTAL_ALIGNMENT_LEFT,-1,16,GOLD)
+	
+	var desc=["Alazán clásico","Negro profundo","Dorado luminoso","Tordillo elegante","Zaino oscuro","Bayo de campo"]
+	draw_string(font,Vector2(825,292),desc[selected_horse],HORIZONTAL_ALIGNMENT_LEFT,-1,21,MUTED)
+	
+	draw_string(font,Vector2(825,340),"VELOCIDAD",HORIZONTAL_ALIGNMENT_LEFT,-1,16,WHITE)
+	draw_rect(Rect2(955,328,210,12),Color("#203c4b"),true)
+	draw_rect(Rect2(955,328,155+selected_horse*8,12),GOLD,true)
+	draw_string(font,Vector2(825,380),"CONTROL",HORIZONTAL_ALIGNMENT_LEFT,-1,16,WHITE)
+	draw_rect(Rect2(955,368,210,12),Color("#203c4b"),true)
+	draw_rect(Rect2(955,368,185-selected_horse*6,12),Color("#4acb83"),true)
+	draw_string(font,Vector2(825,420),"RESISTENCIA",HORIZONTAL_ALIGNMENT_LEFT,-1,16,WHITE)
+	draw_rect(Rect2(955,408,210,12),Color("#203c4b"),true)
+	draw_rect(Rect2(955,408,140+(selected_horse%3)*20,12),Color("#63b9df"),true)
+	
+	draw_string(font,Vector2(825,468),"VALOR: 500 MONEDAS",HORIZONTAL_ALIGNMENT_LEFT,-1,20,GOLD)
+	draw_string(font,Vector2(825,510),"SELECCIONADO" if selected_horse==0 else "DISPONIBLE",HORIZONTAL_ALIGNMENT_LEFT,-1,17,GREEN if selected_horse==0 else MUTED)
+	draw_button(Rect2(850,620,300,55),"VOLVER","back")
 
 func draw_bulls():
-	title("TOROS",80)
-	draw_string(font,Vector2(0,125),"Variantes para la primera temporada",HORIZONTAL_ALIGNMENT_CENTER,W,22,MUTED)
-	draw_bull(Vector2(640,315),bull_colors[selected_bull])
-	draw_string(font,Vector2(0,430),bull_names[selected_bull],HORIZONTAL_ALIGNMENT_CENTER,W,40,WHITE)
-	draw_button(Rect2(300,540,150,65),"‹","prev_bull")
-	draw_button(Rect2(465,540,350,65),"SELECCIONAR","next_bull",RED)
-	draw_button(Rect2(830,540,150,65),"›","next_bull")
-	draw_button(Rect2(470,630,340,55),"VOLVER","back")
+	title("TOROS DE COMPETENCIA",68,40)
+	draw_string(font,Vector2(55,112),"ELIGE TU TORO",HORIZONTAL_ALIGNMENT_LEFT,-1,25,GOLD)
+	draw_string(font,Vector2(55,140),"Cada variante cambia el carácter visual de la manga.",HORIZONTAL_ALIGNMENT_LEFT,-1,17,MUTED)
+	
+	draw_rect(Rect2(45,170,720,410),Color("#102a39"),true)
+	draw_rect(Rect2(45,170,720,410),Color("#3e6070"),false,3)
+	draw_rect(Rect2(70,195,670,250),Color("#718b91"),true)
+	draw_rect(Rect2(70,330,670,115),Color("#9a6844"),true)
+	draw_bull(Vector2(400,355),bull_colors[selected_bull])
+	
+	draw_button(Rect2(95,485,105,55),"‹","prev_bull")
+	draw_button(Rect2(210,485,250,55),"SELECCIONAR","next_bull",RED)
+	draw_button(Rect2(470,485,105,55),"›","next_bull")
+	
+	draw_rect(Rect2(790,170,445,410),Color("#0d1e2a"),true)
+	draw_rect(Rect2(790,170,445,410),Color("#345365"),false,3)
+	draw_string(font,Vector2(825,220),bull_names[selected_bull],HORIZONTAL_ALIGNMENT_LEFT,-1,34,WHITE)
+	draw_string(font,Vector2(825,250),"TORO DE MANGA",HORIZONTAL_ALIGNMENT_LEFT,-1,16,GOLD)
+	
+	var bull_desc=["Castaño: equilibrado","Colorado: potente","Negro: impredecible","Barcino: resistente"]
+	draw_string(font,Vector2(825,292),bull_desc[selected_bull],HORIZONTAL_ALIGNMENT_LEFT,-1,21,MUTED)
+	
+	draw_string(font,Vector2(825,340),"IMPULSO",HORIZONTAL_ALIGNMENT_LEFT,-1,16,WHITE)
+	draw_rect(Rect2(955,328,210,12),Color("#203c4b"),true)
+	draw_rect(Rect2(955,328,145+selected_bull*18,12),RED,true)
+	draw_string(font,Vector2(825,380),"AGILIDAD",HORIZONTAL_ALIGNMENT_LEFT,-1,16,WHITE)
+	draw_rect(Rect2(955,368,210,12),Color("#203c4b"),true)
+	draw_rect(Rect2(955,368,180-selected_bull*10,12),GOLD,true)
+	draw_string(font,Vector2(825,420),"DESAFÍO",HORIZONTAL_ALIGNMENT_LEFT,-1,16,WHITE)
+	draw_rect(Rect2(955,408,210,12),Color("#203c4b"),true)
+	draw_rect(Rect2(955,408,130+selected_bull*22,12),Color("#d76b6b"),true)
+	
+	draw_string(font,Vector2(825,468),"CATEGORÍA  •  COMPETENCIA",HORIZONTAL_ALIGNMENT_LEFT,-1,18,GOLD)
+	draw_string(font,Vector2(825,510),"LISTO PARA LA MANGA",HORIZONTAL_ALIGNMENT_LEFT,-1,17,GREEN)
+	draw_button(Rect2(850,620,300,55),"VOLVER","back")
 
 func draw_custom():
-	title("COLEADOR",80)
-	draw_string(font,Vector2(0,125),"Personaliza tu atleta",HORIZONTAL_ALIGNMENT_CENTER,W,22,MUTED)
-	draw_character(Vector2(430,310),horse_colors[selected_horse],skin,hair,beard)
-	draw_button(Rect2(650,200,420,58),"CAMBIAR PIEL","skin")
-	draw_button(Rect2(650,275,420,58),"CAMBIAR CABELLO","hair")
-	draw_button(Rect2(650,350,420,58),"ESTILO DE CABELLO / BARBA","style")
-	draw_button(Rect2(650,425,420,58),"COLOR DE BARBA","beard")
-	draw_button(Rect2(650,510,420,58),"GUARDAR PERSONAJE","back",RED)
-	draw_button(Rect2(470,630,340,55),"VOLVER","back")
+	title("COLEADOR",68,40)
+	draw_string(font,Vector2(55,112),"CREA TU COLEADOR",HORIZONTAL_ALIGNMENT_LEFT,-1,25,GOLD)
+	draw_string(font,Vector2(55,140),"Tu atleta entra a la manga con su propio estilo.",HORIZONTAL_ALIGNMENT_LEFT,-1,17,MUTED)
+	
+	draw_rect(Rect2(45,170,610,410),Color("#102a39"),true)
+	draw_rect(Rect2(45,170,610,410),Color("#3e6070"),false,3)
+	draw_rect(Rect2(70,195,560,285),Color("#203c48"),true)
+	draw_circle(Vector2(350,285),92,Color(0.32,0.64,0.72,0.16))
+	draw_character(Vector2(350,375),horse_colors[selected_horse],skin,hair,beard)
+	
+	draw_rect(Rect2(700,170,535,410),Color("#0d1e2a"),true)
+	draw_rect(Rect2(700,170,535,410),Color("#345365"),false,3)
+	draw_string(font,Vector2(735,220),"PERSONALIZACIÓN",HORIZONTAL_ALIGNMENT_LEFT,-1,30,WHITE)
+	
+	draw_button(Rect2(735,250,465,52),"PIEL","skin")
+	draw_button(Rect2(735,315,465,52),"CABELLO","hair")
+	draw_button(Rect2(735,380,465,52),"BARBA / ESTILO","style")
+	draw_button(Rect2(735,445,465,52),"COLOR DE BARBA","beard")
+	
+	draw_string(font,Vector2(735,535),"PERSONAJE GUARDADO",HORIZONTAL_ALIGNMENT_LEFT,-1,17,GREEN)
+	draw_button(Rect2(850,620,300,55),"VOLVER","back")
 
 func draw_tournaments():
 	title("TORNEOS",80)
