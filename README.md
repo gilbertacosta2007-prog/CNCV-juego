@@ -27,3 +27,14 @@ La nomenclatura de pelajes incluye alazán/alazano, zaino, bayo, castaño, negro
 4. Clubes/equipos y campeonatos.
 5. Personalización profunda.
 6. Selector de música Android mediante almacenamiento del dispositivo.
+
+
+## Contenido venezolano investigado
+
+La V1 usa como referencia pública el ecosistema de la Federación Venezolana de Coleo (FEVECO): categorías C, B, A, AA, Master y Supermaster, además de copas y campeonatos nacionales publicados por la federación. También se incorporaron asociaciones estatales y nombres de clubes que aparecen en sus registros públicos.
+
+Ejemplos de clubes/identidades documentadas: Club de Coleo Sota de Oro, Club de Coleo Tinaquillo, Club San Juan Bautista, Club de Coleo Naranjeros de Carabobo, Club de Coleo UDS y Los Herederos del Llano.
+
+Para ambientación de mangas se tomaron como referencias públicas la Manga Juan Canelón y la Manga Don Pedro Maya. Estos nombres son referencias de contenido y no implican afiliación del juego con dichas organizaciones o instalaciones.
+
+La implementación evita presentar como oficiales datos que todavía son conceptuales (estadísticas de jugadores, habilidades exactas y precios del videojuego). El objetivo es separar claramente el contenido inspirado en registros reales de las mecánicas propias de CNBC.
