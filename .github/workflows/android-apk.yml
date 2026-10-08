@@ -64,5 +64,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: CNBC-Android-APK
-          path: build/*.apk
+          path: build/Android/CNBC.apk
           if-no-files-found: error
