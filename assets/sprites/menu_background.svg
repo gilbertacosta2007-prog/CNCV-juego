@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#071827"/><stop offset=".48" stop-color="#235064"/><stop offset=".75" stop-color="#c18b62"/><stop offset="1" stop-color="#f0c28a"/></linearGradient>
+ <linearGradient id="earth" x2="0" y2="1"><stop stop-color="#c68d59"/><stop offset=".45" stop-color="#9b633f"/><stop offset="1" stop-color="#503326"/></linearGradient>
+ <linearGradient id="stand" x2="0" y2="1"><stop stop-color="#314b59"/><stop offset="1" stop-color="#101d28"/></linearGradient>
+ <linearGradient id="rail" x2="0" y2="1"><stop stop-color="#f4dfb2"/><stop offset=".5" stop-color="#b08a55"/><stop offset="1" stop-color="#4c3a2a"/></linearGradient>
+ <radialGradient id="glow"><stop stop-color="#ffe2a0" stop-opacity=".72"/><stop offset="1" stop-color="#ffcb83" stop-opacity="0"/></radialGradient>
+ <pattern id="crowd" width="34" height="27" patternUnits="userSpaceOnUse"><rect width="34" height="27" fill="#192e3b"/><circle cx="7" cy="6" r="3" fill="#d4a581"/><path d="M3 11h8v9H3z" fill="#c94e45"/><circle cx="22" cy="7" r="3" fill="#a87c62"/><path d="M17 12h10v8H17z" fill="#d8c7a0"/></pattern>
+ <pattern id="sand" width="86" height="61" patternUnits="userSpaceOnUse"><circle cx="12" cy="17" r="2" fill="#f0c08a" opacity=".5"/><circle cx="51" cy="41" r="2" fill="#39251b" opacity=".28"/><path d="M25 54l15 -4M66 10l10 -3" stroke="#f4d0a2" stroke-width="2" opacity=".25"/></pattern>
+</defs>
+<rect width="1280" height="720" fill="url(#sky)"/>
+<circle cx="1030" cy="160" r="250" fill="url(#glow)"/><circle cx="1030" cy="160" r="54" fill="#ffe3aa" opacity=".75"/>
+<path d="M0 248 Q170 208 320 236T650 228T980 239T1280 215V380H0Z" fill="#638b70"/>
+<path d="M0 289 Q180 256 370 283T760 272T1280 264V398H0Z" fill="#456f5b"/>
+<!-- stadium structure -->
+<path d="M0 82L1280 42V287L0 320Z" fill="#172c39"/>
+<path d="M0 74L1280 34V61L0 103Z" fill="#d8c8a7"/>
+<path d="M0 102L1280 61V79L0 122Z" fill="#594936"/>
+<rect x="0" y="125" width="1280" height="176" fill="url(#stand)"/>
+<g transform="skewY(-1.8)"><rect x="0" y="145" width="1280" height="150" fill="url(#crowd)"/><path d="M0 181H1280M0 220H1280M0 258H1280" stroke="#6e8790" stroke-width="5" opacity=".5"/></g>
+<g stroke="#344a54" stroke-width="12"><path d="M76 0V170"/><path d="M1203 0V155"/></g>
+<g fill="#fff5d1"><rect x="34" y="8" width="86" height="24" rx="5"/><rect x="1160" y="8" width="86" height="24" rx="5"/></g>
+<g stroke="#fff2c4" stroke-width="4" opacity=".18"><path d="M43 32L260 300M78 32L300 300M1198 32L1010 300M1231 32L1060 300"/></g>
+<!-- tricolor pennants -->
+<g><path d="M180 83V220M278 79V218M1000 60V215M1100 57V211" stroke="#725a3f" stroke-width="4"/><path d="M182 86l53 12-53 12z" fill="#e4bd3b"/><path d="M182 98l53 12-53 12z" fill="#315eb2"/><path d="M182 110l53 12-53 12z" fill="#c84245"/><path d="M280 82l50 12-50 12z" fill="#c84245"/><path d="M280 94l50 12-50 12z" fill="#f2ead6"/><path d="M280 106l50 12-50 12z" fill="#d6b83d"/><path d="M1002 63l-50 12 50 12z" fill="#e4bd3b"/><path d="M1002 75l-50 12 50 12z" fill="#315eb2"/><path d="M1002 87l-50 12 50 12z" fill="#c84245"/><path d="M1102 60l-48 12 48 12z" fill="#c84245"/><path d="M1102 72l-48 12 48 12z" fill="#f2ead6"/><path d="M1102 84l-48 12 48 12z" fill="#d6b83d"/></g>
+<!-- arena rails -->
+<path d="M0 290H1280V355H0Z" fill="#6f5038"/><path d="M0 294H1280V307H0Z" fill="url(#rail)"/><path d="M0 331H1280V343H0Z" fill="#e9d8ad"/>
+<g stroke="#dfcba0" stroke-width="9"><path d="M25 290V354M95 290V354M165 290V354M235 290V354M305 290V354M375 290V354M445 290V354M515 290V354M585 290V354M655 290V354M725 290V354M795 290V354M865 290V354M935 290V354M1005 290V354M1075 290V354M1145 290V354M1215 290V354"/></g>
+<path d="M0 354L1280 354V720H0Z" fill="url(#earth)"/><path d="M0 354L1280 354V720H0Z" fill="url(#sand)"/>
+<!-- perspective lanes -->
+<g stroke="#e4c092" stroke-width="4" opacity=".25"><path d="M640 354L70 720M640 354L300 720M640 354L520 720M640 354L760 720M640 354L980 720M640 354L1210 720"/><path d="M0 430Q640 465 1280 430M0 530Q640 575 1280 530M0 640Q640 690 1280 640"/></g>
+<!-- foreground dust and stadium silhouettes -->
+<g fill="#f2c58f" opacity=".28"><ellipse cx="490" cy="602" rx="190" ry="21"/><ellipse cx="940" cy="644" rx="210" ry="17"/><ellipse cx="690" cy="552" rx="90" ry="11"/></g>
+<rect width="1280" height="720" fill="#03111b" opacity=".18"/>
+</svg>
