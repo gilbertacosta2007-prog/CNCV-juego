@@ -246,7 +246,12 @@ func handle_touch(p: Vector2):
 			player_vel.x=min(280.0,player_vel.x+95.0)
 		elif Rect2(930,H-145,135,95).has_point(p):
 			player_vel.x=max(0.0,player_vel.x-120.0)
-		elif Rect2(1080,H-145,150,95).has_point(p):
+		elif Rect2(1040,H-175,205,145).has_point(p):
+			if not qte_active and not grabbed and player.distance_to(bull) < 190 and qte_cooldown <= 0:
+				qte_active=true
+				qte_pos=Vector2(clamp(bull.x-95,360,980),clamp(bull.y-90,220,500))
+				qte_radius=92.0
+				qte_speed=[68.0,74.0,84.0,78.0][selected_bull]
 			try_grab()
 		return
 	for b in buttons:
@@ -378,7 +383,7 @@ func start_game():
 	var horse_speed=[1.10,0.96,1.04,0.92,1.07,1.12][selected_horse]
 	var bull_speed=[55.0,62.0,70.0,66.0][selected_bull]
 	player_vel=Vector2(120*horse_speed,0)
-	bull_vel=Vector2(-bull_speed,0)
+	bull_vel=Vector2(bull_speed,0)
 	championship_status="EN CURSO"
 	animation_state="ride"
 	animation_timer=0.0
@@ -402,13 +407,14 @@ func update_game(delta):
 	bull += bull_vel*delta
 	player.x=clamp(player.x,120,1050)
 	player.y=clamp(player.y,190,570)
-	if bull.x < 180:
-		bull.x=1050
+	if bull.x > 1110:
+		bull.x=180
 		bull.y=randf_range(240,520)
-	var distance=player.distance_to(bull)
-	if distance < 125 and not qte_active and qte_cooldown<=0 and not grabbed:
+	var tail_point=bull+Vector2(-145,0)
+	var distance=player.distance_to(tail_point)
+	if distance < 155 and not qte_active and qte_cooldown<=0 and not grabbed:
 		qte_active=true
-		qte_pos=Vector2(randf_range(420,940),randf_range(210,500))
+		qte_pos=Vector2(clamp(tail_point.x+20,360,980),clamp(tail_point.y-75,220,500))
 		qte_radius=92
 		qte_speed=[68.0,74.0,84.0,78.0][selected_bull]
 		qte_result=""
@@ -686,6 +692,11 @@ func draw_game():
 	for i in range(29): draw_line(Vector2(i*46,145),Vector2(i*46,188),Color("#d7ceb2"),5)
 	# Arena con perspectiva y textura.
 	draw_rect(Rect2(0,184,W,H-184),Color("#95613f"),true)
+	# Luz y profundidad de estadio.
+	draw_circle(Vector2(260,260),190,Color(1.0,0.86,0.55,0.055))
+	draw_circle(Vector2(980,330),240,Color(0.25,0.75,0.95,0.045))
+	draw_line(Vector2(0,690),Vector2(W,690),Color("#6f442e"),12)
+	draw_line(Vector2(0,675),Vector2(W,675),Color("#c58a55"),3)
 	draw_rect(Rect2(0,184,W,H-184),Color("#b4774c"),false,7)
 	for i in range(8):
 		draw_line(Vector2(0,210+i*62),Vector2(W,244+i*62),Color(1,0.83,0.58,0.055),5)
@@ -709,7 +720,11 @@ func draw_game():
 	draw_string(font,Vector2(45,238),"TURNO  •  COLEO VENEZOLANO",HORIZONTAL_ALIGNMENT_LEFT,-1,18,GOLD)
 	draw_speed_dust(player)
 	draw_speed_dust(bull)
-	var rider_pos=player+Vector2(0,sin(elapsed*10.0)*3.0)
+	var gait_phase=elapsed*12.0
+	var rider_bob=sin(gait_phase)*4.0
+	var rider_pos=player+Vector2(0,rider_bob)
+	if player_vel.length()>25.0:
+		rider_pos += Vector2(0,abs(sin(gait_phase))*3.0)
 	if animation_state=="miss":
 		rider_pos += Vector2(-sin(elapsed*18.0)*8.0,abs(sin(elapsed*18.0))*3.0)
 	draw_character(rider_pos,horse_colors[selected_horse],skin,hair,beard)
@@ -742,10 +757,12 @@ func draw_game():
 	draw_circle(Vector2(995,H-190),58,Color("#162b36"))
 	draw_arc(Vector2(995,H-190),58,0,TAU,48,GOLD,4)
 	draw_string(font,Vector2(940,H-197),"FRENAR",HORIZONTAL_ALIGNMENT_CENTER,110,15,WHITE)
-	draw_circle(Vector2(1125,H-190),68,Color("#a92d35"))
-	draw_arc(Vector2(1125,H-190),68,0,TAU,48,Color("#f5d66d"),5)
-	draw_string(font,Vector2(1062,H-197),"AGARRAR",HORIZONTAL_ALIGNMENT_CENTER,126,16,WHITE)
-	draw_string(font,Vector2(1062,H-170),"COLA",HORIZONTAL_ALIGNMENT_CENTER,126,14,GOLD)
+	draw_circle(Vector2(1125,H-190),72,Color("#a92d35"))
+	draw_circle(Vector2(1125,H-190),61,Color("#7d222b"))
+	draw_arc(Vector2(1125,H-190),72,0,TAU,64,Color("#f5d66d"),6)
+	draw_arc(Vector2(1125,H-190),52,-1.2,1.2,24,Color("#ffffff"),3)
+	draw_string(font,Vector2(1055,H-199),"AGARRAR",HORIZONTAL_ALIGNMENT_CENTER,140,18,WHITE)
+	draw_string(font,Vector2(1055,H-171),"COLA",HORIZONTAL_ALIGNMENT_CENTER,140,15,GOLD)
 	draw_rect(Rect2(920,H-95,300,48),Color(0.02,0.06,0.09,0.88),true)
 	draw_string(font,Vector2(940,H-64),"ACELERAR  ▶",HORIZONTAL_ALIGNMENT_LEFT,-1,18,WHITE)
 
@@ -759,10 +776,14 @@ func draw_speed_dust(p:Vector2):
 func draw_character(p:Vector2,hc:Color,sc:Color,hairc:Color,beardc:Color):
 	draw_ellipse(p+Vector2(8,51),Vector2(96,20),Color(0.03,0.02,0.015,0.38))
 	var dark=hc.darkened(0.38)
-	for x in [-44.0,-16.0,18.0,48.0]:
-		draw_line(p+Vector2(x,12),p+Vector2(x-3,48),dark,11)
-		draw_line(p+Vector2(x-3,44),p+Vector2(x-7,61),hc.darkened(0.18),8)
-		draw_rect(Rect2(p+Vector2(x-11,58),Vector2(20,8)),Color("#141313"),true)
+	var leg_swing=sin(elapsed*12.0)*7.0 if screen=="game" else 0.0
+	var leg_xs=[-44.0,-16.0,18.0,48.0]
+	for i in range(4):
+		var x=leg_xs[i]
+		var swing=leg_swing if i%2==0 else -leg_swing
+		draw_line(p+Vector2(x,12),p+Vector2(x+swing*0.35,48),dark,11)
+		draw_line(p+Vector2(x+swing*0.35,44),p+Vector2(x-7+swing,61),hc.darkened(0.18),8)
+		draw_rect(Rect2(p+Vector2(x-11+swing,58),Vector2(20,8)),Color("#141313"),true)
 	draw_ellipse(p+Vector2(-2,7),Vector2(80,39),hc.darkened(0.08))
 	draw_ellipse(p+Vector2(-24,-2),Vector2(54,25),hc.lightened(0.18))
 	draw_poly(PackedVector2Array([p+Vector2(30,15),p+Vector2(46,-28),p+Vector2(60,-70),p+Vector2(88,-69),p+Vector2(100,-40),p+Vector2(73,-7),p+Vector2(60,20)]),PackedColorArray([hc,hc.lightened(0.14),hc,hc.darkened(0.08),hc,hc,hc]))
@@ -809,10 +830,14 @@ func draw_character(p:Vector2,hc:Color,sc:Color,hairc:Color,beardc:Color):
 func draw_bull(p:Vector2,c:Color):
 	draw_ellipse(p+Vector2(4,54),Vector2(104,19),Color(0.03,0.02,0.015,0.38))
 	var dark=c.darkened(0.34)
-	for x in [-59.0,-28.0,25.0,59.0]:
-		draw_line(p+Vector2(x,17),p+Vector2(x-3,49),dark,12)
-		draw_line(p+Vector2(x-3,45),p+Vector2(x-6,64),c.darkened(0.18),8)
-		draw_rect(Rect2(p+Vector2(x-10,61),Vector2(20,8)),Color("#141313"),true)
+	var bull_gait=sin(elapsed*11.0)*8.0 if screen=="game" else 0.0
+	var bull_legs=[-59.0,-28.0,25.0,59.0]
+	for i in range(4):
+		var x=bull_legs[i]
+		var swing=bull_gait if i%2==0 else -bull_gait
+		draw_line(p+Vector2(x,17),p+Vector2(x+swing*0.25,49),dark,12)
+		draw_line(p+Vector2(x+swing*0.25,45),p+Vector2(x-6+swing,64),c.darkened(0.18),8)
+		draw_rect(Rect2(p+Vector2(x-10+swing,61),Vector2(20,8)),Color("#141313"),true)
 	draw_ellipse(p+Vector2(-5,2),Vector2(99,44),c.darkened(0.08))
 	draw_ellipse(p+Vector2(-30,-6),Vector2(61,29),c.lightened(0.11))
 	draw_ellipse(p+Vector2(69,-18),Vector2(40,35),c.darkened(0.03))
