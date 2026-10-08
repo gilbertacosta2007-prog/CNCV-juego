@@ -177,7 +177,7 @@ func _process(delta):
 		update_game(delta)
 	if animation_timer > 0.0:
 		animation_timer=max(0.0,animation_timer-delta)
-		if animation_state=="fall" and animation_timer <= 0.0:
+		if (animation_state=="fall" or animation_state=="miss") and animation_timer <= 0.0:
 			animation_state="idle"
 			bull_fall_angle=0.0
 			bull_fall_offset=Vector2.ZERO
@@ -224,6 +224,12 @@ func _input(event):
 
 func handle_touch(p: Vector2):
 	if screen == "game":
+		if Rect2(40,35,175,58).has_point(p):
+			activate_button("game_menu")
+			return
+		if Rect2(225,35,175,58).has_point(p):
+			activate_button("game_exit")
+			return
 		if Rect2(1080,H-235,150,92).has_point(p):
 			player_vel.x=min(280.0,player_vel.x+95.0)
 		elif Rect2(930,H-145,135,95).has_point(p):
@@ -260,6 +266,25 @@ func activate_button(id: String):
 			screen="music"
 		"back":
 			screen="menu"
+			joystick_active=false
+			joystick_touch_id=-1
+			joystick_vector=Vector2.ZERO
+		"game_menu":
+			screen="menu"
+			joystick_active=false
+			joystick_touch_id=-1
+			joystick_vector=Vector2.ZERO
+			player_vel=Vector2.ZERO
+			qte_active=false
+			grabbed=false
+		"game_exit":
+			screen="tournaments"
+			joystick_active=false
+			joystick_touch_id=-1
+			joystick_vector=Vector2.ZERO
+			player_vel=Vector2.ZERO
+			qte_active=false
+			grabbed=false
 		"next_horse":
 			selected_horse=(selected_horse+1)%horse_names.size()
 		"prev_horse":
@@ -317,6 +342,8 @@ func activate_button(id: String):
 			selected_venue=(selected_venue+1)%venue_names.size()
 		"reset_campaign":
 			reset_campaign()
+		"start_championship":
+			start_game()
 	save_state()
 
 func start_game():
@@ -604,6 +631,10 @@ func draw_manga_preview(pos:Vector2,size:Vector2):
 	draw_string(font,pos+Vector2(105,255),"MANGA DE COLEO",HORIZONTAL_ALIGNMENT_LEFT,-1,20,WHITE)
 
 func draw_game():
+	# Persistent navigation: the player is never trapped inside the manga.
+	draw_button(Rect2(40,35,175,58),"‹  MENÚ","game_menu",Color("#16374b"))
+	draw_button(Rect2(225,35,175,58),"SALIR","game_exit",Color("#4a2730"))
+
 	draw_rect(Rect2(0,0,W,H),Color("#6aaec9"),true)
 	draw_rect(Rect2(0,0,W,180),Color("#7fc3da"),true)
 	draw_circle(Vector2(1110,70),46,Color("#f6d983"))
