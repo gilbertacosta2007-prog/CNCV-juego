@@ -1,5 +1,5 @@
 [application]
-config/name="CNBC - Campeonato Nacional de Coleo Venezolano"
+config/name="CNB"
 run/main_scene="res://main.tscn"
 config/icon="res://assets/feveco_icon_final.jpg"
 config/features=PackedStringArray("4.3", "GL Compatibility")
