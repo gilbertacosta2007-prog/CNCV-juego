@@ -70,6 +70,14 @@ var joystick_active := false
 var joystick_touch_id := -1
 var joystick_vector := Vector2.ZERO
 var joystick_center := Vector2(145, H-128)
+var animation_state := "idle"
+var animation_timer := 0.0
+var animation_result := ""
+var animation_score_popup := 0.0
+var bull_fall_angle := 0.0
+var bull_fall_offset := Vector2.ZERO
+var round_turns := 0
+var tournament_complete := false
 
 # Datos inspirados en registros públicos de FEVECO para dar identidad venezolana al V1.
 var association_index := 0
@@ -167,6 +175,14 @@ func load_state():
 func _process(delta):
 	if screen == "game":
 		update_game(delta)
+	if animation_timer > 0.0:
+		animation_timer=max(0.0,animation_timer-delta)
+		if animation_state=="fall" and animation_timer <= 0.0:
+			animation_state="idle"
+			bull_fall_angle=0.0
+			bull_fall_offset=Vector2.ZERO
+			grabbed=false
+			qte_cooldown=0.8
 	queue_redraw()
 
 func _apply_custom_colors():
@@ -305,6 +321,8 @@ func activate_button(id: String):
 
 func start_game():
 	validate_championship_selection()
+	if tournament_complete:
+		reset_campaign()
 	screen="game"
 	elapsed=0
 	score=0
@@ -317,6 +335,10 @@ func start_game():
 	player_vel=Vector2(120,0)
 	bull_vel=Vector2(-55,0)
 	championship_status="EN CURSO"
+	animation_state="ride"
+	animation_timer=0.0
+	animation_result=""
+	round_turns += 1
 	save_state()
 
 func update_game(delta):
@@ -345,7 +367,12 @@ func update_game(delta):
 		qte_result=""
 	if qte_active:
 		qte_radius=max(18,qte_radius-qte_speed*delta)
-	if grabbed:
+		if qte_radius <= 18.0:
+			resolve_grab("FALLO",0.0,false)
+	if animation_state=="fall":
+		bull_fall_angle=-0.78*clamp((1.4-animation_timer)/0.45,0.0,1.0)
+		bull_fall_offset=Vector2(0,clamp((1.4-animation_timer)/0.45,0.0,1.0)*30.0)
+	elif grabbed:
 		bull += Vector2(120,0)*delta
 		player += Vector2(95,0)*delta
 	if qte_active and Input.is_action_just_pressed("action_grab"):
@@ -370,6 +397,8 @@ func reset_campaign():
 	championship_points=0.0
 	championship_turns=0
 	championship_round=0
+	round_turns=0
+	tournament_complete=false
 	player_championship_position=0
 	championship_status="EN CURSO"
 	for i in range(rival_points.size()):
@@ -395,14 +424,19 @@ func finish_championship_turn():
 		if table[row].player:
 			player_championship_position=row+1
 			break
-	if championship_round < 2:
-		if player_championship_position <= 4:
+	if player_championship_position > 4:
+		championship_status="ELIMINADO"
+		tournament_complete=true
+	elif championship_round < 2:
+		if round_turns >= 2:
 			championship_round += 1
+			round_turns=0
 			championship_status="CLASIFICADO"
 		else:
-			championship_status="ELIMINADO"
+			championship_status="EN CURSO"
 	else:
 		championship_status="CAMPEÓN" if player_championship_position == 1 else ("PODIO" if player_championship_position <= 3 else "FINALISTA")
+		tournament_complete=true
 
 func get_round_name()->String:
 	if championship_round == 0:
@@ -426,22 +460,31 @@ func try_grab():
 	var good_min=52.0
 	var regular_min=70.0
 	if qte_radius <= perfect_min:
-		qte_result="¡COLEO PERFECTO!"
-		score += 3.5
-		grabbed=true
+		resolve_grab("¡COLEO PERFECTO!",3.5,true)
 	elif qte_radius <= good_min:
-		qte_result="¡COLEO BUENO!"
-		score += 2.5
-		grabbed=true
+		resolve_grab("¡COLEO BUENO!",2.5,true)
 	elif qte_radius <= regular_min:
-		qte_result="COLEO REGULAR"
-		score += 1.5
-		grabbed=true
+		resolve_grab("COLEO REGULAR",1.5,true)
 	else:
-		qte_result="FALLO"
-		score += 0
+		resolve_grab("FALLO",0.0,false)
+
+func resolve_grab(result:String, points:float, success:bool):
+	if not qte_active and result=="FALLO":
+		return
 	qte_active=false
 	qte_cooldown=1.5
+	qte_result=result
+	score += points
+	animation_result=result
+	animation_score_popup=points
+	if success:
+		grabbed=true
+		animation_state="fall"
+		animation_timer=1.4
+	else:
+		grabbed=false
+		animation_state="miss"
+		animation_timer=0.9
 
 func draw_button(rect:Rect2, label:String, id:String, accent:=Color("#17344b")):
 	buttons.append({"id":id,"pos":rect.position,"size":rect.size})
@@ -610,18 +653,29 @@ func draw_game():
 	draw_string(font,Vector2(45,238),"TURNO  •  COLEO VENEZOLANO",HORIZONTAL_ALIGNMENT_LEFT,-1,18,GOLD)
 	draw_speed_dust(player)
 	draw_speed_dust(bull)
-	draw_character(player,horse_colors[selected_horse],skin,hair,beard)
-	draw_bull(bull,bull_colors[selected_bull])
+	var rider_pos=player+Vector2(0,sin(elapsed*10.0)*3.0)
+	if animation_state=="miss":
+		rider_pos += Vector2(-sin(elapsed*18.0)*8.0,abs(sin(elapsed*18.0))*3.0)
+	draw_character(rider_pos,horse_colors[selected_horse],skin,hair,beard)
+	if animation_state=="fall":
+		draw_set_transform(bull+bull_fall_offset,bull_fall_angle,Vector2.ONE)
+		draw_bull(Vector2.ZERO,bull_colors[selected_bull])
+		draw_set_transform(Vector2.ZERO,0.0,Vector2.ONE)
+	else:
+		draw_bull(bull,bull_colors[selected_bull])
 	if qte_active:
 		draw_circle(qte_pos,qte_radius+10,Color(1,0.76,0.16,0.08))
 		draw_arc(qte_pos,qte_radius,0,TAU,72,GOLD,8)
 		draw_arc(qte_pos,34,0,TAU,64,WHITE,4)
 		draw_circle(qte_pos,13,Color("#fff4c7"))
 		draw_string(font,qte_pos+Vector2(-105,-qte_radius-18),"¡AGARRA LA COLA!",HORIZONTAL_ALIGNMENT_CENTER,210,20,GOLD)
-	if grabbed:
-		draw_rect(Rect2(390,96,500,66),Color(0.02,0.09,0.10,0.86),true)
-		draw_rect(Rect2(390,96,500,66),Color("#e6c24d"),false,2)
-		draw_string(font,Vector2(390,139),qte_result,HORIZONTAL_ALIGNMENT_CENTER,500,32,GREEN)
+	if animation_state=="miss":
+		draw_rect(Rect2(390,96,500,66),Color(0.25,0.02,0.02,0.88),true)
+		draw_string(font,Vector2(390,139),"¡FALLO!  INTÉNTALO DE NUEVO",HORIZONTAL_ALIGNMENT_CENTER,500,30,WHITE)
+	elif animation_state=="fall":
+		draw_rect(Rect2(390,96,500,66),Color(0.02,0.09,0.10,0.88),true)
+		draw_string(font,Vector2(390,139),animation_result,HORIZONTAL_ALIGNMENT_CENTER,500,32,GOLD)
+		draw_string(font,Vector2(545,178),"+"+("%.1f"%animation_score_popup)+" PUNTOS",HORIZONTAL_ALIGNMENT_CENTER,190,20,WHITE)
 	# Controles limpios.
 	draw_circle(joystick_center,112,Color(0.01,0.03,0.05,0.88))
 	draw_arc(joystick_center,112,0,TAU,64,Color("#b5c7cd"),4)
