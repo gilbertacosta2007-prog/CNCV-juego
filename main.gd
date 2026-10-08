@@ -18,6 +18,7 @@ const SKY := Color("#36b9e8")
 const DIRT := Color("#9a6844")
 
 var screen := "menu"
+var selected_club := 0
 var buttons: Array[Dictionary] = []
 var player := Vector2(360, 380)
 var bull := Vector2(700, 340)
@@ -58,6 +59,8 @@ var club_names := [
 	"Club de Coleo Naranjeros de Carabobo","Club de Coleo UDS","Club de Coleo Lara",
 	"Club Deportivo de Coleo Yocoima","Los Herederos del Llano"
 ]
+var club_states := ["Cojedes","Cojedes","Bolívar","Carabobo","Carabobo","Lara","Bolívar","Apure"]
+var club_categories := ["B / A / AA","B / Master","A","A / B / Femenino","A","AA / Destete","B / A","A"]
 var venue_names := ["Manga Juan Canelón","Manga Don Pedro Maya"]
 var tournament_names := [
 	"Campeonato Categoría C",
@@ -118,6 +121,8 @@ func activate_button(id: String):
 			screen="bulls"
 		"coleadores":
 			screen="custom"
+		"clubs":
+			screen="clubs"
 		"tournaments":
 			screen="tournaments"
 		"shop":
@@ -151,6 +156,10 @@ func activate_button(id: String):
 			hair_style=(hair_style+1)%3
 		"association":
 			association_index=(association_index+1)%association_names.size()
+		"next_club":
+			selected_club=(selected_club+1)%club_names.size()
+		"prev_club":
+			selected_club=(selected_club-1+club_names.size())%club_names.size()
 		"venue":
 			# La manga se alternará al iniciar la siguiente partida.
 			pass
@@ -242,6 +251,7 @@ func _draw():
 		"horses": draw_horses()
 		"bulls": draw_bulls()
 		"custom": draw_custom()
+		"clubs": draw_clubs()
 		"tournaments": draw_tournaments()
 		"shop": draw_shop()
 		"profile": draw_profile()
@@ -318,12 +328,12 @@ func draw_menu():
 	draw_button(Rect2(315,387,255,60),"TIENDA","shop",PANEL2)
 	draw_button(Rect2(48,459,255,60),"PERFIL","profile",PANEL2)
 	draw_button(Rect2(315,459,255,60),"MÚSICA","music",PANEL2)
+	draw_button(Rect2(48,531,255,60),"CLUBES","clubs",PANEL2)
+	draw_button(Rect2(315,531,255,60),"AJUSTES","settings",PANEL2)
 	
 	# Pie de navegación
-	draw_rect(Rect2(48,540,522,58),Color("#0e2533"),true)
-	draw_string(font,Vector2(70,576),"⚙  AJUSTES",HORIZONTAL_ALIGNMENT_LEFT,-1,18,WHITE)
-	draw_string(font,Vector2(270,576),"ANDROID  •  V1",HORIZONTAL_ALIGNMENT_LEFT,-1,16,MUTED)
-	draw_string(font,Vector2(415,576),"●  EN DESARROLLO",HORIZONTAL_ALIGNMENT_LEFT,-1,15,GREEN)
+	draw_string(font,Vector2(48,616),"ANDROID  •  V1",HORIZONTAL_ALIGNMENT_LEFT,-1,16,MUTED)
+	draw_string(font,Vector2(315,616),"●  EN DESARROLLO",HORIZONTAL_ALIGNMENT_LEFT,-1,15,GREEN)
 	
 	# Perfil rápido
 	draw_rect(Rect2(612,535,598,48),Color(0.02,0.06,0.08,0.78),true)
@@ -650,6 +660,48 @@ func draw_custom():
 	draw_string(font,Vector2(735,555),"CLUB  •  "+club_names[association_index%club_names.size()],HORIZONTAL_ALIGNMENT_LEFT,-1,16,GOLD)
 	draw_string(font,Vector2(735,580),"Licencia / categoría: C → B → A → AA",HORIZONTAL_ALIGNMENT_LEFT,-1,15,MUTED)
 	draw_button(Rect2(850,620,300,55),"VOLVER","back")
+
+func draw_clubs():
+	title("CLUBES Y ASOCIACIONES",68,40)
+	draw_string(font,Vector2(55,112),"REPRESENTA A TU TIERRA",HORIZONTAL_ALIGNMENT_LEFT,-1,25,GOLD)
+	draw_string(font,Vector2(55,140),"Clubes tomados como referencias de registros públicos de FEVECO.",HORIZONTAL_ALIGNMENT_LEFT,-1,17,MUTED)
+
+	draw_rect(Rect2(45,170,760,420),Color("#102a39"),true)
+	draw_rect(Rect2(45,170,760,420),Color("#3e6070"),false,3)
+
+	# Identidad visual del club
+	draw_rect(Rect2(70,195,300,345),Color("#183747"),true)
+	draw_circle(Vector2(220,305),92,Color("#0b1720"))
+	draw_circle(Vector2(220,305),72,Color("#e2b83f"))
+	draw_circle(Vector2(220,305),58,Color("#17344b"))
+	draw_string(font,Vector2(145,315),"CNBC",HORIZONTAL_ALIGNMENT_CENTER,150,30,WHITE)
+	draw_string(font,Vector2(108,385),"REPRESENTACIÓN",HORIZONTAL_ALIGNMENT_CENTER,225,16,GOLD)
+
+	# Datos reales de referencia
+	draw_string(font,Vector2(410,230),club_names[selected_club],HORIZONTAL_ALIGNMENT_LEFT,350,25,WHITE)
+	draw_string(font,Vector2(410,275),"ESTADO",HORIZONTAL_ALIGNMENT_LEFT,-1,14,MUTED)
+	draw_string(font,Vector2(410,302),club_states[selected_club],HORIZONTAL_ALIGNMENT_LEFT,-1,25,GOLD)
+	draw_string(font,Vector2(410,345),"CATEGORÍAS REGISTRADAS",HORIZONTAL_ALIGNMENT_LEFT,-1,14,MUTED)
+	draw_string(font,Vector2(410,373),club_categories[selected_club],HORIZONTAL_ALIGNMENT_LEFT,-1,22,WHITE)
+	draw_string(font,Vector2(410,418),"ESTATUS EN CNBC",HORIZONTAL_ALIGNMENT_LEFT,-1,14,MUTED)
+	draw_string(font,Vector2(410,446),"REFERENCIA VENEZOLANA",HORIZONTAL_ALIGNMENT_LEFT,-1,20,GREEN)
+	draw_string(font,Vector2(410,495),"Clubes reales de referencia.",HORIZONTAL_ALIGNMENT_LEFT,-1,16,MUTED)
+	draw_string(font,Vector2(410,518),"Las estadísticas jugables son del videojuego.",HORIZONTAL_ALIGNMENT_LEFT,-1,15,MUTED)
+
+	draw_button(Rect2(95,545,105,55),"‹","prev_club")
+	draw_button(Rect2(210,545,250,55),"REPRESENTAR","next_club",RED)
+	draw_button(Rect2(470,545,105,55),"›","next_club")
+	draw_button(Rect2(885,620,300,55),"VOLVER","back")
+
+	# Lista lateral
+	draw_rect(Rect2(835,170,400,420),Color("#0d1e2a"),true)
+	draw_rect(Rect2(835,170,400,420),Color("#345365"),false,3)
+	draw_string(font,Vector2(865,215),"CLUBES DESTACADOS",HORIZONTAL_ALIGNMENT_LEFT,-1,28,WHITE)
+	for i in club_names.size():
+		var y=245+i*40
+		var selected=i==selected_club
+		draw_rect(Rect2(860,y-24,350,34),Color("#24485b") if selected else Color("#132b39"),true)
+		draw_string(font,Vector2(875,y),club_names[i],HORIZONTAL_ALIGNMENT_LEFT,325,14,GOLD if selected else WHITE)
 
 func draw_tournaments():
 	title("CAMPEONATOS",68,40)
