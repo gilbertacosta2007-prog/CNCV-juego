@@ -223,20 +223,85 @@ func title(text:String, y:=70.0, size:=44):
 	draw_string(font,Vector2(0,y),text,HORIZONTAL_ALIGNMENT_CENTER,W,size,WHITE)
 
 func draw_menu():
-	draw_string(font,Vector2(55,55),"CNBC",HORIZONTAL_ALIGNMENT_LEFT,-1,42,GOLD)
-	draw_string(font,Vector2(55,88),"CAMPEONATO NACIONAL DE COLEO VENEZOLANO",HORIZONTAL_ALIGNMENT_LEFT,-1,18,MUTED)
-	draw_string(font,Vector2(70,170),"TU MANGA. TU CABALLO. TU COLEO.",HORIZONTAL_ALIGNMENT_LEFT,-1,34,WHITE)
-	draw_manga_preview(Vector2(780,180),Vector2(430,280))
-	draw_button(Rect2(70,225,350,72),"JUGAR","play",RED)
-	draw_button(Rect2(70,315,170,62),"CABALLOS","horses")
-	draw_button(Rect2(250,315,170,62),"COLEADORES","coleadores")
-	draw_button(Rect2(70,390,170,62),"TOROS","bulls")
-	draw_button(Rect2(250,390,170,62),"TORNEOS","tournaments")
-	draw_button(Rect2(70,465,170,62),"TIENDA","shop")
-	draw_button(Rect2(250,465,170,62),"PERFIL","profile")
-	draw_button(Rect2(70,540,170,62),"AJUSTES","settings")
-	draw_button(Rect2(250,540,170,62),"MÚSICA","music")
-	draw_string(font,Vector2(70,660),"Prototipo V1 • Android • Pixel art con profundidad",HORIZONTAL_ALIGNMENT_LEFT,-1,18,MUTED)
+	# Fondo principal tipo portada deportiva
+	draw_rect(Rect2(0,0,W,H),Color("#06101a"),true)
+	draw_rect(Rect2(0,0,W,235),Color("#102c3b"),true)
+	draw_rect(Rect2(0,235,W,H-235),Color("#091824"),true)
+	
+	# Luces de estadio
+	draw_circle(Vector2(1110,90),170,Color(0.25,0.75,0.9,0.07))
+	draw_circle(Vector2(160,620),190,Color(0.95,0.55,0.15,0.05))
+	for i in 0..7:
+		var beam_x=520+i*92
+		draw_polygon(PackedVector2Array([
+			Vector2(beam_x,0),Vector2(beam_x+18,0),Vector2(beam_x+110,235),Vector2(beam_x+60,235)
+		]),PackedColorArray([Color(0.7,0.9,1.0,0.025),Color(0.7,0.9,1.0,0.025),Color(0.7,0.9,1.0,0.025),Color(0.7,0.9,1.0,0.025)]))
+	
+	# Marca
+	draw_string(font,Vector2(48,62),"CNBC",HORIZONTAL_ALIGNMENT_LEFT,-1,48,GOLD)
+	draw_string(font,Vector2(51,91),"CAMPEONATO NACIONAL DE COLEO VENEZOLANO",HORIZONTAL_ALIGNMENT_LEFT,-1,16,MUTED)
+	
+	# Encabezado de temporada
+	draw_rect(Rect2(48,120,520,82),Color(0.02,0.07,0.10,0.88),true)
+	draw_rect(Rect2(48,120,520,82),Color("#284b5e"),false,2)
+	draw_string(font,Vector2(72,151),"LA MANGA TE ESPERA",HORIZONTAL_ALIGNMENT_LEFT,-1,20,WHITE)
+	draw_string(font,Vector2(72,183),"DOMINA EL TIEMPO. AGARRA LA COLA.",HORIZONTAL_ALIGNMENT_LEFT,-1,25,GOLD)
+	
+	# Panel protagonista
+	draw_rect(Rect2(590,38,642,560),Color("#0c202d"),true)
+	draw_rect(Rect2(590,38,642,560),Color("#36566a"),false,3)
+	draw_rect(Rect2(612,60,598,330),Color("#17323d"),true)
+	
+	# Mini manga dentro de portada
+	draw_rect(Rect2(612,60,598,330),Color("#4e7180"),true)
+	draw_rect(Rect2(612,205,598,185),Color("#9a6844"),true)
+	draw_rect(Rect2(612,193,598,14),Color("#e2d5a5"),true)
+	for i in 0..11:
+		var sx=630+i*49
+		draw_line(Vector2(sx,132),Vector2(sx,198),Color("#d7cfad"),3)
+		draw_circle(Vector2(sx,126),8,Color("#d83b45") if i%3==0 else Color("#eee6c9"))
+	for i in 0..16:
+		draw_circle(Vector2(625+i*34,178+(i%3)*5),4,Color("#d7dde0"))
+	
+	# Acción principal de la portada
+	draw_speed_dust(Vector2(870,310))
+	draw_character(Vector2(850,300),horse_colors[selected_horse],skin,hair,beard)
+	draw_bull(Vector2(1025,294),bull_colors[selected_bull])
+	draw_line(Vector2(930,287),Vector2(988,290),Color("#e8c27a"),4)
+	
+	# QTE decorativo
+	draw_circle(Vector2(1065,145),43,Color(0.95,0.78,0.18,0.12))
+	draw_arc(Vector2(1065,145),43,0,TAU,48,GOLD,5)
+	draw_circle(Vector2(1065,145),13,WHITE)
+	draw_string(font,Vector2(988,96),"AGARRA LA COLA",HORIZONTAL_ALIGNMENT_CENTER,154,17,GOLD)
+	
+	# Nombre del juego dentro de la portada
+	draw_string(font,Vector2(650,440),"COLEO",HORIZONTAL_ALIGNMENT_LEFT,-1,48,WHITE)
+	draw_string(font,Vector2(650,478),"VENEZOLANO",HORIZONTAL_ALIGNMENT_LEFT,-1,28,GOLD)
+	draw_string(font,Vector2(650,513),"Una manga. Un caballo. Una oportunidad.",HORIZONTAL_ALIGNMENT_LEFT,-1,18,MUTED)
+	
+	# Menú principal en dos columnas
+	draw_button(Rect2(48,235,255,68),"JUGAR","play",RED)
+	draw_button(Rect2(315,235,255,68),"CABALLOS","horses",PANEL2)
+	draw_button(Rect2(48,315,255,60),"COLEADORES","coleadores",PANEL2)
+	draw_button(Rect2(315,315,255,60),"TOROS","bulls",PANEL2)
+	draw_button(Rect2(48,387,255,60),"TORNEOS","tournaments",PANEL2)
+	draw_button(Rect2(315,387,255,60),"TIENDA","shop",PANEL2)
+	draw_button(Rect2(48,459,255,60),"PERFIL","profile",PANEL2)
+	draw_button(Rect2(315,459,255,60),"MÚSICA","music",PANEL2)
+	
+	# Pie de navegación
+	draw_rect(Rect2(48,540,522,58),Color("#0e2533"),true)
+	draw_string(font,Vector2(70,576),"⚙  AJUSTES",HORIZONTAL_ALIGNMENT_LEFT,-1,18,WHITE)
+	draw_string(font,Vector2(270,576),"ANDROID  •  V1",HORIZONTAL_ALIGNMENT_LEFT,-1,16,MUTED)
+	draw_string(font,Vector2(415,576),"●  EN DESARROLLO",HORIZONTAL_ALIGNMENT_LEFT,-1,15,GREEN)
+	
+	# Perfil rápido
+	draw_rect(Rect2(612,535,598,48),Color(0.02,0.06,0.08,0.78),true)
+	draw_string(font,Vector2(635,566),"COLEADOR NOVATO",HORIZONTAL_ALIGNMENT_LEFT,-1,16,WHITE)
+	draw_string(font,Vector2(900,566),"MONEDAS  %d"%coins,HORIZONTAL_ALIGNMENT_LEFT,-1,16,GOLD)
+	draw_string(font,Vector2(1060,566),"● ONLINE",HORIZONTAL_ALIGNMENT_LEFT,-1,15,GREEN)
+
 
 func draw_manga_preview(pos:Vector2,size:Vector2):
 	draw_rect(Rect2(pos,size),Color("#1c3440"),true)
