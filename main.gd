@@ -577,9 +577,7 @@ func draw_menu():
 	draw_circle(Vector2(160,620),190,Color(0.95,0.55,0.15,0.05))
 	for i in range(8):
 		var beam_x=520+i*92
-		draw_poly(PackedVector2Array([
-			Vector2(beam_x,0),Vector2(beam_x+18,0),Vector2(beam_x+110,235),Vector2(beam_x+60,235)
-		]),PackedColorArray([Color(0.7,0.9,1.0,0.025),Color(0.7,0.9,1.0,0.025),Color(0.7,0.9,1.0,0.025),Color(0.7,0.9,1.0,0.025)]))
+		draw_line(Vector2(beam_x,0),Vector2(beam_x+110,235),Color(0.7,0.9,1.0,0.035),2)
 	
 	# Marca
 	draw_string(font,Vector2(48,62),"FEVECO",HORIZONTAL_ALIGNMENT_LEFT,-1,48,GOLD)
@@ -837,7 +835,7 @@ func draw_bull(p:Vector2,c:Color):
 
 func draw_poly(points:PackedVector2Array, colors:PackedColorArray):
 	if points.size() >= 3 and colors.size() > 0:
-		draw_polygon(points, colors)
+		draw_colored_polygon(points, colors[0])
 
 
 func draw_ellipse(center:Vector2,r:Vector2,c:Color):
