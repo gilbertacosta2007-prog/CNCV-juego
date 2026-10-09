@@ -304,12 +304,16 @@ func handle_touch(p: Vector2):
 		elif Rect2(930,H-145,135,95).has_point(p):
 			player_vel.x=max(0.0,player_vel.x-120.0)
 		elif Rect2(1040,H-175,205,145).has_point(p):
-			if not qte_active and not grabbed and player.distance_to(bull) < 190 and qte_cooldown <= 0:
+			# Primer toque: iniciar la maniobra. Segundo toque: ejecutar el agarre.
+			# Antes se iniciaba el QTE y se evaluaba en el mismo toque, causando FALLO inmediato.
+			if qte_active:
+				try_grab()
+			elif not grabbed and player.distance_to(bull) < 220.0 and qte_cooldown <= 0.0:
 				qte_active=true
 				qte_pos=Vector2(clamp(bull.x-95,360,980),clamp(bull.y-90,220,500))
 				qte_radius=92.0
 				qte_speed=[68.0,74.0,84.0,78.0][selected_bull]
-			try_grab()
+				qte_result=""
 		return
 	for b in buttons:
 		if Rect2(b.pos,b.size).has_point(p):
@@ -480,8 +484,10 @@ func update_game(delta):
 		if qte_radius <= 18.0:
 			resolve_grab("FALLO",0.0,false)
 	if animation_state=="fall":
-		bull_fall_angle=-0.78*clamp((1.4-animation_timer)/0.45,0.0,1.0)
-		bull_fall_offset=Vector2(0,clamp((1.4-animation_timer)/0.45,0.0,1.0)*30.0)
+		# Caída mucho más visible: el toro se inclina de lado y baja hasta la arena.
+		var fall_progress=clamp((1.8-animation_timer)/0.42,0.0,1.0)
+		bull_fall_angle=-1.28*fall_progress
+		bull_fall_offset=Vector2(0,fall_progress*62.0)
 	elif grabbed:
 		bull += Vector2(120,0)*delta
 		player += Vector2(95,0)*delta
@@ -597,7 +603,9 @@ func resolve_grab(result:String, points:float, success:bool):
 	if success:
 		grabbed=true
 		animation_state="fall"
-		animation_timer=1.4
+		animation_timer=1.8
+		bull_fall_angle=0.0
+		bull_fall_offset=Vector2.ZERO
 	else:
 		grabbed=false
 		animation_state="miss"
