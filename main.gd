@@ -365,8 +365,12 @@ func activate_button(id: String):
 			grabbed=false
 		"next_horse":
 			selected_horse=(selected_horse+1)%horse_names.size()
+			horse_texture=_make_horse_pixel_texture()
+			horse_sprite.texture=horse_texture
 		"prev_horse":
 			selected_horse=(selected_horse-1+horse_names.size())%horse_names.size()
+			horse_texture=_make_horse_pixel_texture()
+			horse_sprite.texture=horse_texture
 		"buy_horse":
 			if owned_horses[selected_horse]:
 				pass
@@ -375,8 +379,12 @@ func activate_button(id: String):
 				owned_horses[selected_horse] = true
 		"next_bull":
 			selected_bull=(selected_bull+1)%bull_names.size()
+			bull_texture=_make_bull_pixel_texture()
+			bull_sprite.texture=bull_texture
 		"prev_bull":
 			selected_bull=(selected_bull-1+bull_names.size())%bull_names.size()
+			bull_texture=_make_bull_pixel_texture()
+			bull_sprite.texture=bull_texture
 		"skin":
 			skin_index=(skin_index+1)%6
 			var skins=[Color("#3d2418"),Color("#6b4028"),Color("#8a5a3b"),Color("#ad744a"),Color("#c88758"),Color("#e0a979")]
@@ -1296,6 +1304,17 @@ func _make_bull_pixel_texture() -> Texture2D:
 		"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 	]
 	var palette := [Color.TRANSPARENT, Color("#29202b"), Color("#49313a"), Color("#754332"), Color("#a45d36"), Color("#34252a"), Color("#c17a45"), Color("#e4ad63"), Color("#c3a0a0"), Color("#e2c5b1"), Color("#2d6d4c"), Color("#fff0ce"), Color("#4b352d"), Color("#d9d6cf"), Color("#c94c38"), Color("#f0cb4d")]
+	var coat_sets := [
+		[Color("#302820"), Color("#513b2c"), Color("#765d47"), Color("#b18b63")],
+		[Color("#5c4636"), Color("#795a43"), Color("#a17b59"), Color("#c9a27a")],
+		[Color("#181818"), Color("#292626"), Color("#484444"), Color("#77716e")],
+		[Color("#765d47"), Color("#9d7a5a"), Color("#c3a17b"), Color("#e0c5a0")]
+	]
+	var coat = coat_sets[clampi(selected_bull, 0, coat_sets.size()-1)]
+	palette[3] = coat[0]
+	palette[4] = coat[1]
+	palette[6] = coat[2]
+	palette[7] = coat[3]
 	return _texture_from_pixel_rows(rows, palette)
 
 func _make_horse_pixel_texture() -> Texture2D:
@@ -1382,6 +1401,19 @@ func _make_horse_pixel_texture() -> Texture2D:
 		"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 	]
 	var palette := [Color.TRANSPARENT, Color("#29202b"), Color("#49313a"), Color("#754332"), Color("#a45d36"), Color("#34252a"), Color("#c17a45"), Color("#e4ad63"), Color("#c3a0a0"), Color("#e2c5b1"), Color("#2d6d4c"), Color("#fff0ce"), Color("#4b352d"), Color("#d9d6cf"), Color("#c94c38"), Color("#f0cb4d")]
+	var coat_sets := [
+		[Color("#754332"), Color("#a45d36"), Color("#c17a45"), Color("#e4ad63")],
+		[Color("#29272a"), Color("#3b373b"), Color("#5b5558"), Color("#8a8587")],
+		[Color("#9b6030"), Color("#c58a43"), Color("#e3b969"), Color("#f1d68b")],
+		[Color("#8a8984"), Color("#b9b7ae"), Color("#d4d2cb"), Color("#eee9dc")],
+		[Color("#4b352d"), Color("#7f5a37"), Color("#a98155"), Color("#d1b080")],
+		[Color("#9a6a28"), Color("#d4a45f"), Color("#e8c47a"), Color("#f3dfa5")]
+	]
+	var coat = coat_sets[clampi(selected_horse, 0, coat_sets.size()-1)]
+	palette[3] = coat[0]
+	palette[4] = coat[1]
+	palette[6] = coat[2]
+	palette[7] = coat[3]
 	return _texture_from_pixel_rows(rows, palette)
 
 func _make_arena_pixel_texture() -> Texture2D:
