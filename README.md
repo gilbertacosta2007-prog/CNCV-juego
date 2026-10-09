@@ -12,7 +12,7 @@ Primera versión jugable para Android, construida con Godot 4.
 - Selección inicial de toros.
 - Personalización básica del coleador.
 - Menús de caballos, toros, coleadores, torneos, tienda, perfil, ajustes y música.
-- Arquitectura preparada para sustituir los gráficos provisionales por arte pixel detallado.
+- Sprites rasterizados de pixel art para toro, caballo con coleador y escenario; se generan desde mapas de píxeles y no dependen de SVG.
 
 ## Dirección artística
 Pixel art de alta resolución con profundidad y volumen, inspirado en juegos deportivos móviles modernos, manteniendo identidad visual propia para el coleo venezolano.
@@ -21,7 +21,7 @@ Pixel art de alta resolución con profundidad y volumen, inspirado en juegos dep
 La nomenclatura de pelajes incluye alazán/alazano, zaino, bayo, castaño, negro, palomino, pinto, rosillo, ruano y tordillo, entre otros. La V1 usa una selección inicial de esos pelajes.
 
 ## Próximos hitos
-1. Arte pixel definitivo de caballo, coleador, toro, manga, público y jueces.
+1. Ampliar el set de sprites rasterizados: poses animadas, más pelajes, público, jueces, obstáculos y detalles de manga.
 2. Física y animaciones de coleo más fieles al reglamento FEVECO.
 3. Más escenarios venezolanos reales.
 4. Clubes/equipos y campeonatos.
