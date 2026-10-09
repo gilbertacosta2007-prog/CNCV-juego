@@ -1,42 +1,85 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="620" height="390" viewBox="0 0 620 390">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="560" viewBox="0 0 900 560">
 <defs>
- <linearGradient id="hide" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a28260"/><stop offset=".28" stop-color="#76553d"/><stop offset=".65" stop-color="#4a3427"/><stop offset="1" stop-color="#211a17"/></linearGradient>
- <linearGradient id="face" x2="0" y2="1"><stop stop-color="#9a7655"/><stop offset="1" stop-color="#38281f"/></linearGradient>
- <linearGradient id="horn" x2="0" y2="1"><stop stop-color="#fff4d2"/><stop offset="1" stop-color="#b7a17b"/></linearGradient>
- <filter id="shadow"><feGaussianBlur stdDeviation="8"/></filter>
+ <linearGradient id="coat" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#c29a6b"/><stop offset=".18" stop-color="#94704d"/><stop offset=".43" stop-color="#65452f"/><stop offset=".72" stop-color="#3a291f"/><stop offset="1" stop-color="#211914"/></linearGradient>
+ <linearGradient id="shoulder" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b18a60"/><stop offset=".28" stop-color="#765239"/><stop offset=".7" stop-color="#493022"/><stop offset="1" stop-color="#261b15"/></linearGradient>
+ <linearGradient id="face" x1="0" y1="0" x2=".7" y2="1"><stop stop-color="#a17a53"/><stop offset=".42" stop-color="#64452f"/><stop offset="1" stop-color="#2b2019"/></linearGradient>
+ <linearGradient id="muzzle" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#89735f"/><stop offset=".55" stop-color="#594536"/><stop offset="1" stop-color="#30231c"/></linearGradient>
+ <linearGradient id="horn" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#fff4d9"/><stop offset=".48" stop-color="#d9c7a0"/><stop offset="1" stop-color="#8f7858"/></linearGradient>
+ <linearGradient id="hoof" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#39302a"/><stop offset="1" stop-color="#100f0e"/></linearGradient>
+ <radialGradient id="shine" cx=".35" cy=".22" r=".8"><stop stop-color="#e0bd8a" stop-opacity=".72"/><stop offset="1" stop-color="#c29a6b" stop-opacity="0"/></radialGradient>
+ <filter id="softshadow" x="-30%" y="-30%" width="160%" height="180%"><feGaussianBlur stdDeviation="11"/></filter>
 </defs>
-<ellipse cx="300" cy="334" rx="226" ry="22" fill="#080a0b" opacity=".38" filter="url(#shadow)"/>
-<!-- tail -->
-<path d="M103 206Q64 208 42 253L24 275Q17 284 10 274Q18 244 43 219Q65 192 104 190Z" fill="#211a17" stroke="#2a1d16" stroke-width="6"/>
-<!-- legs -->
-<g stroke="#33251d" stroke-width="25" stroke-linecap="round" fill="none">
- <path d="M173 241L162 301L151 327"/><path d="M229 251L229 305L220 331"/><path d="M380 244L393 300L405 323"/><path d="M434 229L454 286L467 311"/>
-</g>
-<g stroke="#927252" stroke-width="8" stroke-linecap="round" fill="none"><path d="M162 301l-11 25"/><path d="M229 305l-9 26"/><path d="M393 300l12 23"/><path d="M454 286l13 25"/></g>
-<g fill="#151617" stroke="#0d1012" stroke-width="4"><path d="M134 325l34 0 1 17-41 0z"/><path d="M204 329l34 0 1 16-42 0z"/><path d="M392 321l35 0 6 16-41 0z"/><path d="M455 309l33 0 8 16-39 0z"/></g>
-<!-- massive torso -->
-<path d="M105 207Q101 145 151 123Q210 93 300 116Q375 128 424 174Q451 205 426 247Q384 281 285 278Q176 281 125 250Z" fill="url(#hide)" stroke="#2a1d17" stroke-width="9"/>
-<path d="M135 166Q203 122 289 146Q348 154 390 188" fill="none" stroke="#c09a70" stroke-width="11" opacity=".42"/>
-<path d="M154 225Q257 264 377 226" fill="none" stroke="#291e18" stroke-width="8" opacity=".5"/>
-<!-- shoulder hump -->
-<path d="M342 160Q371 109 412 111Q452 116 472 161L458 226L411 247L377 208Z" fill="url(#hide)" stroke="#2a1d17" stroke-width="8"/>
-<!-- head and muzzle -->
-<path d="M422 165Q435 120 475 112Q516 108 543 139L554 174Q551 205 522 220L474 222L444 204Z" fill="url(#face)" stroke="#291e18" stroke-width="8"/>
-<path d="M486 181Q531 173 556 192L548 216Q519 232 487 213Z" fill="#4a3327" stroke="#291e18" stroke-width="6"/>
-<ellipse cx="518" cy="198" rx="7" ry="5" fill="#120f0d"/><ellipse cx="542" cy="198" rx="7" ry="5" fill="#120f0d"/>
-<!-- eye and brows -->
-<ellipse cx="492" cy="151" rx="11" ry="9" fill="#f2e7d4"/><circle cx="495" cy="151" r="5" fill="#17120f"/>
-<path d="M476 136Q493 126 507 139" stroke="#241a15" stroke-width="8" fill="none" stroke-linecap="round"/>
+<!-- grounded shadow -->
+<ellipse cx="438" cy="465" rx="332" ry="34" fill="#090b0c" opacity=".42" filter="url(#softshadow)"/>
+<!-- tail, thick at the base and tapered -->
+<path d="M168 280 C119 275 103 300 91 338 C83 360 69 376 53 367 C46 360 58 341 66 326 C83 286 110 253 155 251Z" fill="#302219" stroke="#211711" stroke-width="8" stroke-linejoin="round"/>
+<path d="M92 336 C79 358 69 370 54 365" fill="none" stroke="#806044" stroke-width="5" stroke-linecap="round"/>
+<path d="M54 367 Q35 371 26 389 Q45 397 60 380Z" fill="#1a1411"/>
+<!-- far legs behind body -->
+<path d="M239 331 C230 360 232 389 221 415 L207 445 Q199 456 181 450 L174 437 Q188 409 187 382 L184 335Z" fill="#39271d" stroke="#241913" stroke-width="7" stroke-linejoin="round"/>
+<path d="M390 343 C399 371 406 395 408 420 L425 447 Q431 458 416 464 L391 460 Q375 435 371 411 L354 350Z" fill="#302219" stroke="#211710" stroke-width="7" stroke-linejoin="round"/>
+<!-- far hooves -->
+<path d="M177 437 Q194 440 210 444 L215 461 Q211 471 183 470 L169 462Z" fill="url(#hoof)" stroke="#171311" stroke-width="5"/>
+<path d="M394 451 L425 449 L439 464 Q438 475 410 475 L391 465Z" fill="url(#hoof)" stroke="#171311" stroke-width="5"/>
+<!-- main torso: broad rib cage and rounded belly -->
+<path d="M143 264 C135 210 166 165 226 151 C281 130 349 142 400 158 C462 169 520 207 542 257 C560 298 542 342 498 369 C446 395 351 395 273 380 C205 368 159 334 143 264Z" fill="url(#coat)" stroke="#2a1c14" stroke-width="10" stroke-linejoin="round"/>
+<path d="M161 248 C177 198 218 173 268 169 C315 162 363 175 397 192 C337 184 285 193 242 217 C211 234 190 263 181 300 C166 286 160 268 161 248Z" fill="url(#shine)" opacity=".82"/>
+<!-- rib and muscle structure -->
+<path d="M220 203 C242 222 248 251 239 285 C233 309 221 328 208 339" fill="none" stroke="#d0a477" stroke-width="10" opacity=".22" stroke-linecap="round"/>
+<path d="M276 190 C298 223 302 258 291 291 C284 314 274 332 262 346" fill="none" stroke="#201712" stroke-width="9" opacity=".30" stroke-linecap="round"/>
+<path d="M328 191 C350 223 354 263 341 298 C334 321 322 339 310 351" fill="none" stroke="#d2a475" stroke-width="7" opacity=".18" stroke-linecap="round"/>
+<path d="M179 305 C245 353 365 372 467 337" fill="none" stroke="#1e1612" stroke-width="12" opacity=".34" stroke-linecap="round"/>
+<path d="M183 226 C240 182 316 179 376 199" fill="none" stroke="#e2bc8c" stroke-width="7" opacity=".38" stroke-linecap="round"/>
+<!-- nearer hind leg with defined thigh, hock and hoof -->
+<path d="M208 322 C207 344 196 367 199 390 C202 409 215 420 208 441 L197 456 Q194 466 210 468 L235 462 C245 455 238 443 231 429 C225 409 236 392 238 372 L252 335Z" fill="url(#shoulder)" stroke="#2a1b14" stroke-width="8" stroke-linejoin="round"/>
+<path d="M211 348 C211 373 208 391 216 408" fill="none" stroke="#c09a70" stroke-width="8" opacity=".38" stroke-linecap="round"/>
+<path d="M197 452 Q218 456 235 451 L245 465 Q244 478 214 480 L191 470Z" fill="url(#hoof)" stroke="#171311" stroke-width="6" stroke-linejoin="round"/>
+<path d="M213 458 L217 476" stroke="#71604f" stroke-width="3"/>
+<!-- powerful shoulder and hump -->
+<path d="M414 197 C438 157 472 143 508 156 C545 168 568 202 573 244 C576 286 554 326 516 348 C489 363 458 353 438 330 L409 274Z" fill="url(#shoulder)" stroke="#291b14" stroke-width="10" stroke-linejoin="round"/>
+<path d="M438 204 C455 175 480 164 505 174 C528 184 544 211 545 238" fill="none" stroke="#d2a77a" stroke-width="11" opacity=".40" stroke-linecap="round"/>
+<path d="M450 264 C472 294 497 303 529 288" fill="none" stroke="#241912" stroke-width="10" opacity=".34" stroke-linecap="round"/>
+<!-- forelegs with shoulder joints and muscular taper -->
+<path d="M448 318 C449 343 462 368 461 394 L468 429 L486 449 Q491 463 473 467 L451 460 Q437 437 436 412 C432 384 415 362 408 337Z" fill="url(#coat)" stroke="#281a13" stroke-width="8" stroke-linejoin="round"/>
+<path d="M505 314 C513 341 529 360 533 386 L545 420 L563 439 Q571 453 553 461 L532 455 Q515 433 508 410 C498 386 482 362 477 339Z" fill="url(#shoulder)" stroke="#281a13" stroke-width="8" stroke-linejoin="round"/>
+<path d="M455 372 C461 396 462 413 469 431" fill="none" stroke="#d3ab7d" stroke-width="7" opacity=".34" stroke-linecap="round"/>
+<path d="M518 372 C527 397 536 415 544 430" fill="none" stroke="#c49a6c" stroke-width="7" opacity=".27" stroke-linecap="round"/>
+<!-- front hooves -->
+<path d="M450 449 Q470 455 486 449 L499 463 Q500 477 473 480 L451 468Z" fill="url(#hoof)" stroke="#171311" stroke-width="6"/>
+<path d="M531 444 Q550 449 563 439 L578 454 Q578 469 551 473 L532 463Z" fill="url(#hoof)" stroke="#171311" stroke-width="6"/>
+<path d="M475 457 L477 475 M555 451 L557 468" stroke="#6e5a49" stroke-width="3"/>
+<!-- dewlap and thick neck -->
+<path d="M469 197 C493 183 524 191 543 213 C564 239 563 278 545 304 C529 326 514 338 504 360 C486 371 467 357 467 338 L480 303 C460 275 449 237 469 197Z" fill="url(#face)" stroke="#281a13" stroke-width="9" stroke-linejoin="round"/>
+<path d="M499 267 C514 288 514 313 500 335 C492 348 491 360 499 365" fill="none" stroke="#c19a70" stroke-width="7" opacity=".42" stroke-linecap="round"/>
+<!-- head silhouette -->
+<path d="M505 215 C513 180 541 151 576 148 C613 144 648 164 662 192 C674 217 662 244 640 259 L602 276 L558 265 L526 247Z" fill="url(#face)" stroke="#261a14" stroke-width="9" stroke-linejoin="round"/>
+<path d="M533 202 C549 174 577 163 605 169 C627 174 642 188 647 204" fill="none" stroke="#d5ae7d" stroke-width="8" opacity=".43" stroke-linecap="round"/>
 <!-- ears -->
-<path d="M450 135Q424 112 412 133Q427 153 452 153Z" fill="#75533b" stroke="#2c1e17" stroke-width="5"/>
-<path d="M514 126Q540 100 560 121Q548 143 521 145Z" fill="#75533b" stroke="#2c1e17" stroke-width="5"/>
-<!-- horns -->
-<path d="M455 129Q421 104 426 72Q451 88 471 116Z" fill="url(#horn)" stroke="#756044" stroke-width="6"/>
-<path d="M509 126Q534 94 565 88Q552 119 529 139Z" fill="url(#horn)" stroke="#756044" stroke-width="6"/>
-<path d="M437 91Q443 104 458 114M550 102Q540 118 526 128" fill="none" stroke="#d5c39c" stroke-width="4"/>
-<!-- coat markings -->
-<path d="M180 143Q204 157 213 184L191 206L164 181Z" fill="#d6c2a0" opacity=".6"/>
-<path d="M280 147L306 158L293 184L269 171Z" fill="#c8ae88" opacity=".44"/>
-<path d="M343 204L371 199L365 222L339 229Z" fill="#d5b78f" opacity=".4"/>
-<path d="M113 235Q132 250 157 253" stroke="#bd9365" stroke-width="6" fill="none" opacity=".55"/>
+<path d="M541 185 C514 159 485 161 474 179 C490 198 516 203 543 202Z" fill="#755039" stroke="#2a1b14" stroke-width="7"/>
+<path d="M501 181 Q520 179 535 194" fill="none" stroke="#bd9871" stroke-width="4"/>
+<path d="M632 181 C651 151 683 151 696 173 C680 193 655 201 636 201Z" fill="#745039" stroke="#2a1b14" stroke-width="7"/>
+<path d="M649 181 Q670 174 684 177" fill="none" stroke="#c3a07b" stroke-width="4"/>
+<!-- horns: thick at base and naturally tapered -->
+<path d="M545 169 C523 151 505 126 513 103 C518 88 530 79 544 76 C530 96 537 116 560 140 L570 157Z" fill="url(#horn)" stroke="#786348" stroke-width="7" stroke-linejoin="round"/>
+<path d="M633 164 C653 145 674 122 672 100 C670 85 661 75 649 70 C660 91 649 113 627 137 L614 154Z" fill="url(#horn)" stroke="#786348" stroke-width="7" stroke-linejoin="round"/>
+<path d="M523 108 Q530 125 549 142 M663 103 Q656 124 636 142" fill="none" stroke="#fff0cf" stroke-width="4" opacity=".8"/>
+<!-- brow, eye socket, eye and catchlight -->
+<path d="M578 202 C594 189 615 193 628 207" fill="none" stroke="#281912" stroke-width="12" stroke-linecap="round"/>
+<ellipse cx="603" cy="211" rx="11" ry="8" fill="#eadfc9"/>
+<ellipse cx="606" cy="212" rx="5" ry="6" fill="#19120e"/>
+<circle cx="608" cy="209" r="2" fill="#fff7e8"/>
+<!-- cheek and muzzle -->
+<path d="M579 230 C601 222 633 232 649 249 L641 270 C620 286 588 280 566 260Z" fill="url(#muzzle)" stroke="#291b14" stroke-width="7" stroke-linejoin="round"/>
+<path d="M601 246 Q625 239 640 253" fill="none" stroke="#c5a486" stroke-width="4" opacity=".46"/>
+<ellipse cx="624" cy="256" rx="5" ry="4" fill="#16110e"/>
+<ellipse cx="639" cy="258" rx="4" ry="3.5" fill="#16110e"/>
+<path d="M579 272 Q606 288 633 274" fill="none" stroke="#211711" stroke-width="5" stroke-linecap="round"/>
+<!-- coat texture, short curved hair marks -->
+<g fill="none" stroke-linecap="round">
+ <path d="M193 246l15 -8 M218 262l17 -8 M249 235l13 -7 M277 270l17 -8 M308 239l16 -6 M337 276l13 -7 M365 239l15 -6 M391 265l14 -7 M422 237l12 -6 M446 283l12 -6" stroke="#e4bf8d" stroke-width="4" opacity=".40"/>
+ <path d="M204 286l14 5 M236 310l13 5 M268 292l15 4 M300 325l15 3 M335 303l15 4 M369 322l14 2 M398 292l13 4 M432 314l13 3" stroke="#1c1410" stroke-width="5" opacity=".35"/>
+</g>
+<!-- subtle chest highlight and muscle edges -->
+<path d="M481 221 C469 251 484 278 501 292" fill="none" stroke="#d0a77a" stroke-width="6" opacity=".32" stroke-linecap="round"/>
+<path d="M156 269 C163 309 188 337 216 349" fill="none" stroke="#c69c6e" stroke-width="6" opacity=".34" stroke-linecap="round"/>
 </svg>
