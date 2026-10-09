@@ -1295,7 +1295,7 @@ func _make_bull_pixel_texture() -> Texture2D:
 		"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 		"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 	]
-	var palette := [Color("#7fa9c9"), Color("#29202b"), Color("#49313a"), Color("#754332"), Color("#a45d36"), Color("#34252a"), Color("#c17a45"), Color("#e4ad63"), Color("#c3a0a0"), Color("#e2c5b1"), Color("#2d6d4c"), Color("#fff0ce"), Color("#4b352d"), Color("#d9d6cf"), Color("#c94c38"), Color("#f0cb4d")]
+	var palette := [Color.TRANSPARENT, Color("#29202b"), Color("#49313a"), Color("#754332"), Color("#a45d36"), Color("#34252a"), Color("#c17a45"), Color("#e4ad63"), Color("#c3a0a0"), Color("#e2c5b1"), Color("#2d6d4c"), Color("#fff0ce"), Color("#4b352d"), Color("#d9d6cf"), Color("#c94c38"), Color("#f0cb4d")]
 	return _texture_from_pixel_rows(rows, palette)
 
 func _make_horse_pixel_texture() -> Texture2D:
@@ -1381,7 +1381,7 @@ func _make_horse_pixel_texture() -> Texture2D:
 		"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 		"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 	]
-	var palette := [Color("#7fa9c9"), Color("#29202b"), Color("#49313a"), Color("#754332"), Color("#a45d36"), Color("#34252a"), Color("#c17a45"), Color("#e4ad63"), Color("#c3a0a0"), Color("#e2c5b1"), Color("#2d6d4c"), Color("#fff0ce"), Color("#4b352d"), Color("#d9d6cf"), Color("#c94c38"), Color("#f0cb4d")]
+	var palette := [Color.TRANSPARENT, Color("#29202b"), Color("#49313a"), Color("#754332"), Color("#a45d36"), Color("#34252a"), Color("#c17a45"), Color("#e4ad63"), Color("#c3a0a0"), Color("#e2c5b1"), Color("#2d6d4c"), Color("#fff0ce"), Color("#4b352d"), Color("#d9d6cf"), Color("#c94c38"), Color("#f0cb4d")]
 	return _texture_from_pixel_rows(rows, palette)
 
 func _make_arena_pixel_texture() -> Texture2D:
