@@ -786,7 +786,7 @@ func draw_game():
 	if animation_state=="fall":
 		draw_dust_cloud(bull_pos+Vector2(-25,52),elapsed*1.8,1.65)
 	# Sombras y polvo quedan debajo de los personajes; los sprites nunca tapan el HUD.
-	var horse_gait_scale=Vector2(0.49+abs(gait)*0.014,0.47-abs(gait)*0.010)
+	var horse_gait_scale=Vector2(2.55+abs(gait)*0.07,2.45-abs(gait)*0.05)
 	if grabbed:
 		horse_gait_scale*=1.04+sin(elapsed*18.0)*0.025
 	var horse_tint=Color.WHITE # Conserva los degradados y detalles originales del arte.
@@ -796,9 +796,9 @@ func draw_game():
 	var bull_rotation=bull_fall_angle
 	if animation_state=="fall":
 		bull_rotation=-1.42*clamp((1.8-animation_timer)/0.42,0.0,1.0)
-		draw_sprite_layer(bull_texture,bull_pos,Vector2(0.40,0.40),bull_rotation,bull_tint)
+		draw_sprite_layer(bull_texture,bull_pos,Vector2(2.70,2.70),bull_rotation,bull_tint)
 	else:
-		draw_sprite_layer(bull_texture,bull_pos,Vector2(0.40,0.40),0.0,bull_tint)
+		draw_sprite_layer(bull_texture,bull_pos,Vector2(2.70,2.70),0.0,bull_tint)
 	if qte_active:
 		draw_circle(qte_pos,qte_radius+10,Color(1,0.76,0.16,0.08))
 		draw_arc(qte_pos,qte_radius,0,TAU,72,GOLD,8)
