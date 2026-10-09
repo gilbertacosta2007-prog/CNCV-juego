@@ -141,31 +141,32 @@ func _setup_game_sprites():
 	add_child(bull_sprite)
 
 func _update_game_sprites():
-	if horse_sprite == null or bull_sprite == null:
+	# Los sprites se dibujan dentro de draw_game para controlar el orden:
+	# sombras -> partículas -> personajes -> interfaz, sin tapar los botones.
+	if horse_sprite != null:
+		horse_sprite.visible = false
+	if bull_sprite != null:
+		bull_sprite.visible = false
+
+func draw_sprite_layer(texture:Texture2D, center:Vector2, scale_value:Vector2, rotation_value:float, tint:Color):
+	if texture == null:
 		return
-	var active := screen == "game"
-	horse_sprite.visible = active
-	bull_sprite.visible = active
-	if not active:
-		return
-	var gait := sin(elapsed*13.0)
-	var bob := sin(elapsed*13.0)*3.5
-	horse_sprite.position = player + Vector2(0,bob)
-	horse_sprite.rotation = clamp(-player_vel.y/1800.0,-0.10,0.10)
-	horse_sprite.scale = Vector2(0.48 + abs(gait)*0.012,0.48 - abs(gait)*0.008)
-	horse_sprite.modulate = horse_colors[selected_horse].lerp(Color.WHITE,0.42)
-	if animation_state == "miss":
-		horse_sprite.position += Vector2(-sin(elapsed*20.0)*8.0,abs(sin(elapsed*20.0))*3.0)
-	if grabbed:
-		horse_sprite.scale *= 1.04 + sin(elapsed*18.0)*0.025
-	bull_sprite.position = bull + bull_fall_offset
-	bull_sprite.rotation = bull_fall_angle
-	bull_sprite.modulate = bull_colors[selected_bull].lerp(Color.WHITE,0.35)
-	if animation_state == "fall":
-		bull_sprite.rotation = bull_fall_angle
-		bull_sprite.position = bull + bull_fall_offset
-	elif animation_state == "miss":
-		bull_sprite.position += Vector2(sin(elapsed*16.0)*4.0,0)
+	var sprite_size=texture.get_size()
+	draw_set_transform(center,rotation_value,scale_value)
+	draw_texture_rect(texture,Rect2(-sprite_size*0.5,sprite_size),false,tint)
+	draw_set_transform(Vector2.ZERO,0.0,Vector2.ONE)
+
+func draw_ground_shadow(center:Vector2, width:float, alpha:float):
+	draw_ellipse(center+Vector2(0,57),Vector2(width,18),Color(0.025,0.018,0.012,alpha))
+	draw_ellipse(center+Vector2(0,60),Vector2(width*0.68,9),Color(0.025,0.018,0.012,alpha*0.55))
+
+func draw_dust_cloud(center:Vector2, phase:float, intensity:float):
+	for i in range(12):
+		var drift=fposmod(phase*36.0+i*31.0,95.0)
+		var rise=fposmod(phase*21.0+i*17.0,32.0)
+		var radius=2.0+float(i%4)*1.4
+		var alpha=(0.08+float(i%3)*0.025)*intensity
+		draw_circle(center+Vector2(-drift-16.0,-rise+float(i%3)*5.0),radius,Color(0.96,0.76,0.53,alpha))
 
 
 func save_state():
@@ -759,17 +760,40 @@ func draw_game():
 	draw_rect(Rect2(25,202,290,58),Color(0.02,0.06,0.09,0.82),true)
 	draw_rect(Rect2(25,202,290,58),Color("#d8b94f"),false,2)
 	draw_string(font,Vector2(45,238),"TURNO  •  COLEO VENEZOLANO",HORIZONTAL_ALIGNMENT_LEFT,-1,18,GOLD)
-	draw_speed_dust(player)
-	draw_speed_dust(bull)
 	var gait_phase=elapsed*12.0
+	var gait=sin(gait_phase)
 	var rider_bob=sin(gait_phase)*4.0
 	var rider_pos=player+Vector2(0,rider_bob)
 	if player_vel.length()>25.0:
 		rider_pos += Vector2(0,abs(sin(gait_phase))*3.0)
 	if animation_state=="miss":
 		rider_pos += Vector2(-sin(elapsed*18.0)*8.0,abs(sin(elapsed*18.0))*3.0)
-	# Personajes de la manga: sprites detallados, no geometría vectorial.
-	# Las instancias Sprite2D se actualizan en _update_game_sprites().
+	var bull_pos=bull+bull_fall_offset
+	if animation_state=="miss":
+		bull_pos += Vector2(sin(elapsed*16.0)*4.0,0)
+	# Renderizado por capas: sombras suaves, polvo animado, sprites y finalmente HUD.
+	draw_ground_shadow(rider_pos,142.0,0.34)
+	draw_ground_shadow(bull_pos,112.0,0.31 if animation_state!="fall" else 0.20)
+	if player_vel.length()>45.0:
+		draw_dust_cloud(rider_pos+Vector2(-35,48),elapsed,1.0)
+	if abs(bull_vel.x)>25.0 and animation_state!="fall":
+		draw_dust_cloud(bull_pos+Vector2(-25,46),elapsed+1.7,0.75)
+	if animation_state=="fall":
+		draw_dust_cloud(bull_pos+Vector2(-25,52),elapsed*1.8,1.65)
+	# Sombras y polvo quedan debajo de los personajes; los sprites nunca tapan el HUD.
+	var horse_gait_scale=Vector2(0.48+abs(gait)*0.012,0.48-abs(gait)*0.008)
+	if grabbed:
+		horse_gait_scale*=1.04+sin(elapsed*18.0)*0.025
+	var horse_tint=horse_colors[selected_horse].lerp(Color.WHITE,0.42)
+	var horse_rotation=clamp(-player_vel.y/1800.0,-0.10,0.10)
+	draw_sprite_layer(horse_texture,rider_pos,horse_gait_scale,horse_rotation,horse_tint)
+	var bull_tint=bull_colors[selected_bull].lerp(Color.WHITE,0.35)
+	var bull_rotation=bull_fall_angle
+	if animation_state=="fall":
+		bull_rotation=-1.42*clamp((1.8-animation_timer)/0.42,0.0,1.0)
+		draw_sprite_layer(bull_texture,bull_pos,Vector2(0.50,0.50),bull_rotation,bull_tint)
+	else:
+		draw_sprite_layer(bull_texture,bull_pos,Vector2(0.50,0.50),0.0,bull_tint)
 	if qte_active:
 		draw_circle(qte_pos,qte_radius+10,Color(1,0.76,0.16,0.08))
 		draw_arc(qte_pos,qte_radius,0,TAU,72,GOLD,8)
