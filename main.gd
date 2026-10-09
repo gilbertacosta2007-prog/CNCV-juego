@@ -247,8 +247,7 @@ func _process(delta):
 	_update_game_sprites()
 	if animation_timer > 0.0:
 		animation_timer=max(0.0,animation_timer-delta)
-		if (animation_state=="fall" or animation_state=="miss") and animation_timer <= 0.0:
-			animation_state="idle"
+		if (animation_state=="fall" or animation_state=="miss") and animation_timer <= 0.0:			animation_state="idle"
 			bull_fall_angle=0.0
 			bull_fall_offset=Vector2.ZERO
 			grabbed=false
@@ -498,7 +497,6 @@ func update_game(delta):
 		finish_championship_turn()
 		screen="result"
 		save_state()
-
 func validate_championship_selection():
 	# Los torneos nacionales por categoría solo aceptan categorías compatibles.
 	var allowed=tournament_categories[selected_tournament].split(" / ")
@@ -747,8 +745,7 @@ func draw_game():
 		draw_texture_rect(arena_bg_texture,Rect2(0,0,W,H),false)
 	else:
 		draw_rect(Rect2(0,0,W,H),Color("#95613f"),true)
-		draw_rect(Rect2(0,0,W,250),Color("#527f91"),true)
-		draw_rect(Rect2(0,250,W,70),Color("#354b46"),true)
+		draw_rect(Rect2(0,0,W,250),Color("#527f91"),true)		draw_rect(Rect2(0,250,W,70),Color("#354b46"),true)
 	# La manga siempre conserva su profundidad y el HUD queda por encima del fondo.
 	# HUD premium.
 	draw_rect(Rect2(20,14,455,52),Color(0.02,0.06,0.09,0.76),true)
@@ -781,19 +778,19 @@ func draw_game():
 	if animation_state=="fall":
 		draw_dust_cloud(bull_pos+Vector2(-25,52),elapsed*1.8,1.65)
 	# Sombras y polvo quedan debajo de los personajes; los sprites nunca tapan el HUD.
-	var horse_gait_scale=Vector2(0.48+abs(gait)*0.012,0.48-abs(gait)*0.008)
+	var horse_gait_scale=Vector2(0.49+abs(gait)*0.014,0.47-abs(gait)*0.010)
 	if grabbed:
 		horse_gait_scale*=1.04+sin(elapsed*18.0)*0.025
-	var horse_tint=horse_colors[selected_horse].lerp(Color.WHITE,0.42)
+	var horse_tint=Color.WHITE # Conserva los degradados y detalles originales del arte.
 	var horse_rotation=clamp(-player_vel.y/1800.0,-0.10,0.10)
 	draw_sprite_layer(horse_texture,rider_pos,horse_gait_scale,horse_rotation,horse_tint)
-	var bull_tint=bull_colors[selected_bull].lerp(Color.WHITE,0.35)
+	var bull_tint=Color.WHITE # No teñir toda la anatomía: mantiene luces, hocico y cuernos naturales.
 	var bull_rotation=bull_fall_angle
 	if animation_state=="fall":
 		bull_rotation=-1.42*clamp((1.8-animation_timer)/0.42,0.0,1.0)
-		draw_sprite_layer(bull_texture,bull_pos,Vector2(0.50,0.50),bull_rotation,bull_tint)
+		draw_sprite_layer(bull_texture,bull_pos,Vector2(0.40,0.40),bull_rotation,bull_tint)
 	else:
-		draw_sprite_layer(bull_texture,bull_pos,Vector2(0.50,0.50),0.0,bull_tint)
+		draw_sprite_layer(bull_texture,bull_pos,Vector2(0.40,0.40),0.0,bull_tint)
 	if qte_active:
 		draw_circle(qte_pos,qte_radius+10,Color(1,0.76,0.16,0.08))
 		draw_arc(qte_pos,qte_radius,0,TAU,72,GOLD,8)
@@ -997,8 +994,7 @@ func draw_horses():
 	draw_string(font,Vector2(825,250),"PELaje DE COMPETENCIA",HORIZONTAL_ALIGNMENT_LEFT,-1,16,GOLD)
 	
 	var desc=["Alazán clásico","Negro profundo","Dorado luminoso","Tordillo elegante","Zaino oscuro","Bayo de campo"]
-	draw_string(font,Vector2(825,292),desc[selected_horse],HORIZONTAL_ALIGNMENT_LEFT,-1,21,MUTED)
-	
+	draw_string(font,Vector2(825,292),desc[selected_horse],HORIZONTAL_ALIGNMENT_LEFT,-1,21,MUTED)	
 	draw_string(font,Vector2(825,340),"VELOCIDAD",HORIZONTAL_ALIGNMENT_LEFT,-1,16,WHITE)
 	draw_rect(Rect2(955,328,210,12),Color("#203c4b"),true)
 	draw_rect(Rect2(955,328,155+selected_horse*8,12),GOLD,true)
